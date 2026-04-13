@@ -160,6 +160,10 @@ func agentReconcile(
 		if policy.Spec.Suspend {
 			continue
 		}
+		// S6: Skip policies with WorkloadRefs (not supported in MVP)
+		if len(policy.Spec.WorkloadRefs) > 0 {
+			continue
+		}
 
 		// S3: Default to "moderate" if profile is empty
 		profile := policy.Spec.Engine.Profile
@@ -219,7 +223,9 @@ func agentReconcile(
 	// 4. Diff: stop tasks no longer desired
 	for _, name := range tm.RunningTasks() {
 		if _, ok := desiredTasks[name]; !ok {
-			_ = tm.StopTask(ctx, name)
+			if err := tm.StopTask(ctx, name); err != nil {
+				logger.Error(err, "failed to stop task during reconcile diff", "project", name)
+			}
 		}
 	}
 

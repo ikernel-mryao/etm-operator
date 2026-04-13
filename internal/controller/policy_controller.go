@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -37,6 +38,24 @@ func (r *PolicyReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 
 	logger.Info("Reconciling EtmemPolicy", "name", policy.Name, "namespace", policy.Namespace)
 
+	// Validate: WorkloadRefs not supported in MVP
+	if len(policy.Spec.WorkloadRefs) > 0 {
+		condition := metav1.Condition{
+			Type:               "Ready",
+			Status:             metav1.ConditionFalse,
+			Reason:             "WorkloadRefsNotSupported",
+			Message:            "WorkloadRefs is not supported in MVP. Use selector (labelSelector) instead.",
+			LastTransitionTime: metav1.Now(),
+		}
+		setCondition(&policy.Status.Conditions, condition)
+		if err := r.Status().Update(ctx, &policy); err != nil {
+			logger.Error(err, "failed to update policy status")
+			return ctrl.Result{}, err
+		}
+		logger.Info("Policy rejected: WorkloadRefs not supported in MVP", "policy", policy.Name)
+		return ctrl.Result{}, nil
+	}
+
 	summary, err := AggregateForPolicy(ctx, r.Client, policy.Namespace, policy.Name)
 	if err != nil {
 		logger.Error(err, "failed to aggregate NodeState")
@@ -55,4 +74,14 @@ func (r *PolicyReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&etmemv1.EtmemPolicy{}).
 		Complete(r)
+}
+
+func setCondition(conditions *[]metav1.Condition, cond metav1.Condition) {
+	for i, existing := range *conditions {
+		if existing.Type == cond.Type {
+			(*conditions)[i] = cond
+			return
+		}
+	}
+	*conditions = append(*conditions, cond)
 }

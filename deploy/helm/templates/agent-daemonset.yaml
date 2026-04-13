@@ -42,6 +42,9 @@ spec:
             - name: etmem-bin
               mountPath: /usr/bin/etmem
               readOnly: true
+            - name: containerd-sock
+              mountPath: /run/containerd/containerd.sock
+              readOnly: true
       volumes:
         - name: etmemd-socket
           hostPath:
@@ -59,3 +62,7 @@ spec:
           hostPath:
             path: /usr/bin/etmem
             type: File
+        - name: containerd-sock
+          hostPath:
+            path: /run/containerd/containerd.sock
+            type: Socket
