@@ -74,3 +74,25 @@ func TestPIDResolver_ReadRSSKB(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, uint64(1048576), rss)
 }
+
+func TestBuildCgroupRelPath(t *testing.T) {
+	tests := []struct {
+		name     string
+		podUID   string
+		qosClass string
+		expected string
+	}{
+		{"guaranteed", "abc-123", "Guaranteed", "memory/kubepods/podabc-123"},
+		{"burstable", "def-456", "Burstable", "memory/kubepods/burstable/poddef-456"},
+		{"besteffort", "ghi-789", "BestEffort", "memory/kubepods/besteffort/podghi-789"},
+		{"empty qos defaults to besteffort", "xyz", "", "memory/kubepods/besteffort/podxyz"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := BuildCgroupRelPath(tt.podUID, tt.qosClass)
+			if got != tt.expected {
+				t.Errorf("BuildCgroupRelPath(%q, %q) = %q, want %q", tt.podUID, tt.qosClass, got, tt.expected)
+			}
+		})
+	}
+}

@@ -54,3 +54,22 @@ func TestCircuitBreaker_NodeLevel_NotTripped(t *testing.T) {
 	tripped, _ := cb.IsNodeTripped()
 	assert.False(t, tripped)
 }
+
+func TestCircuitBreaker_PodLevel_OOMKilled(t *testing.T) {
+	cb := NewCircuitBreaker(5, 70, "")
+	pod := &corev1.Pod{
+		Status: corev1.PodStatus{
+			ContainerStatuses: []corev1.ContainerStatus{
+				{
+					RestartCount: 1,
+					LastTerminationState: corev1.ContainerState{
+						Terminated: &corev1.ContainerStateTerminated{
+							Reason: "OOMKilled",
+						},
+					},
+				},
+			},
+		},
+	}
+	assert.True(t, cb.IsPodTripped(pod))
+}

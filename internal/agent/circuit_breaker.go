@@ -33,6 +33,10 @@ func (cb *CircuitBreaker) IsPodTripped(pod *corev1.Pod) bool {
 		if int(cs.RestartCount) >= cb.podRestartThreshold {
 			return true
 		}
+		if cs.LastTerminationState.Terminated != nil &&
+			cs.LastTerminationState.Terminated.Reason == "OOMKilled" {
+			return true
+		}
 	}
 	return false
 }

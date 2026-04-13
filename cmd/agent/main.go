@@ -12,6 +12,7 @@ import (
 	"github.com/go-logr/logr"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
@@ -62,14 +63,23 @@ func main() {
 		os.Exit(1)
 	}
 
+	// S1: Fetch node labels at startup
+	var node corev1.Node
+	if err := k8sClient.Get(context.Background(), types.NamespacedName{Name: nodeName}, &node); err != nil {
+		logger.Error(err, "unable to get node")
+		os.Exit(1)
+	}
+	nodeLabels := node.Labels
+
 	executor := &transport.RealExecutor{}
 	tr := transport.NewExecTransport(socketName, executor)
 	tm := agent.NewTaskManager(tr, config.EtmemConfigDir)
 	pidResolver := agent.NewPIDResolver(config.HostProcPath, config.HostCgroupPath)
 	slideEngine := &engine.SlideEngine{}
 
-	// TODO: Phase 3 — initialize CircuitBreaker (Task 3.1)
-	// TODO: Phase 3 — initialize Prometheus metrics (Task 3.4)
+	// C3: Initialize CircuitBreaker and NodeStateWriter
+	cb := agent.NewCircuitBreaker(config.DefaultPodRestartThreshold, config.DefaultNodePSIThreshold, "")
+	nsWriter := agent.NewNodeStateWriter(k8sClient, nodeName)
 
 	logger.Info("Agent starting", "node", nodeName, "interval", reconcileInterval)
 
@@ -93,11 +103,21 @@ func main() {
 			logger.Info("Agent stopped")
 			return
 		case <-ticker.C:
-			if err := agentReconcile(ctx, k8sClient, tm, pidResolver, slideEngine, nodeName, logger); err != nil {
+			start := time.Now()
+			if err := agentReconcile(ctx, k8sClient, tm, pidResolver, slideEngine, cb, nsWriter, nodeName, nodeLabels, logger); err != nil {
 				logger.Error(err, "reconcile failed")
+				agent.ReconcileErrors.Inc()
 			}
+			agent.ReconcileDuration.Observe(time.Since(start).Seconds())
 		}
 	}
+}
+
+type desiredTaskInfo struct {
+	Request   agent.TaskRequest
+	PolicyRef etmemv1.PolicyReference
+	PodName   string
+	PodUID    string
 }
 
 func agentReconcile(
@@ -106,10 +126,19 @@ func agentReconcile(
 	tm *agent.TaskManager,
 	pidResolver *agent.PIDResolver,
 	slideEngine *engine.SlideEngine,
+	cb *agent.CircuitBreaker,
+	nsWriter *agent.NodeStateWriter,
 	nodeName string,
+	nodeLabels map[string]string,
 	logger logr.Logger,
 ) error {
-	// TODO: Phase 3 — check node-level circuit breaker (Task 3.1)
+	// C3: Check node-level circuit breaker
+	if tripped, psi := cb.IsNodeTripped(); tripped {
+		logger.Info("Node-level circuit breaker tripped, stopping all tasks", "psi", psi)
+		agent.CircuitBreakerTrips.Inc()
+		tm.StopAll(ctx)
+		return nil
+	}
 
 	// 1. List all EtmemPolicies
 	var policyList etmemv1.EtmemPolicyList
@@ -117,36 +146,50 @@ func agentReconcile(
 		return fmt.Errorf("list policies: %w", err)
 	}
 
-	// 2. List Pods on this node
+	// C1: List all pods (client-side filtering via MatchPodToPolicy)
 	var podList corev1.PodList
-	if err := k8sClient.List(ctx, &podList, client.MatchingFields{"spec.nodeName": nodeName}); err != nil {
+	if err := k8sClient.List(ctx, &podList); err != nil {
 		return fmt.Errorf("list pods: %w", err)
 	}
 
 	// 3. Build desired task set
-	desiredTasks := make(map[string]agent.TaskRequest)
+	desiredTasks := make(map[string]desiredTaskInfo)
 
 	for i := range policyList.Items {
 		policy := &policyList.Items[i]
 		if policy.Spec.Suspend {
 			continue
 		}
-		params, err := engine.GetProfile(policy.Spec.Engine.Profile)
+
+		// S3: Default to "moderate" if profile is empty
+		profile := policy.Spec.Engine.Profile
+		if profile == "" {
+			profile = "moderate"
+		}
+		params, err := engine.GetProfile(profile)
 		if err != nil {
-			logger.Error(err, "invalid profile", "policy", policy.Name, "profile", policy.Spec.Engine.Profile)
+			logger.Error(err, "invalid profile", "policy", policy.Name, "profile", profile)
 			continue
 		}
 		params = engine.ApplyOverrides(params, policy.Spec.Engine.Overrides)
 
 		for j := range podList.Items {
 			pod := &podList.Items[j]
-			if !agent.MatchPodToPolicy(pod, policy, nodeName, nil) {
+			if !agent.MatchPodToPolicy(pod, policy, nodeName, nodeLabels) {
 				continue
 			}
 
-			// TODO: Phase 3 — check pod-level circuit breaker (Task 3.1)
+			// C3: Check pod-level circuit breaker
+			if cb.IsPodTripped(pod) {
+				logger.Info("Pod-level circuit breaker tripped", "pod", pod.Name)
+				agent.CircuitBreakerTrips.Inc()
+				continue
+			}
 
-			pids, err := pidResolver.ResolvePIDs(string(pod.UID), policy.Spec.ProcessFilter.Names)
+			// C2: Build proper cgroup path
+			qosClass := string(pod.Status.QOSClass)
+			cgroupPath := agent.BuildCgroupRelPath(string(pod.UID), qosClass)
+			pids, err := pidResolver.ResolvePIDs(cgroupPath, policy.Spec.ProcessFilter.Names)
 			if err != nil || len(pids) == 0 {
 				continue
 			}
@@ -157,9 +200,18 @@ func agentReconcile(
 			}
 			projectName := agent.ProjectName(policy.Namespace, pod.Name)
 			configContent := slideEngine.GenerateConfig(projectName, processes, params)
-			desiredTasks[projectName] = agent.TaskRequest{
-				ProjectName:   projectName,
-				ConfigContent: configContent,
+
+			desiredTasks[projectName] = desiredTaskInfo{
+				Request: agent.TaskRequest{
+					ProjectName:   projectName,
+					ConfigContent: configContent,
+				},
+				PolicyRef: etmemv1.PolicyReference{
+					Name:      policy.Name,
+					Namespace: policy.Namespace,
+				},
+				PodName: pod.Name,
+				PodUID:  string(pod.UID),
 			}
 		}
 	}
@@ -172,16 +224,36 @@ func agentReconcile(
 	}
 
 	// 5. Start new tasks
-	for _, req := range desiredTasks {
-		if !tm.IsRunning(req.ProjectName) {
-			if err := tm.StartTask(ctx, req); err != nil {
-				logger.Error(err, "failed to start task", "project", req.ProjectName)
+	for _, taskInfo := range desiredTasks {
+		if !tm.IsRunning(taskInfo.Request.ProjectName) {
+			if err := tm.StartTask(ctx, taskInfo.Request); err != nil {
+				logger.Error(err, "failed to start task", "project", taskInfo.Request.ProjectName)
 			}
 		}
 	}
 
-	// TODO: Phase 3 — update metrics (Task 3.4)
-	// TODO: Phase 3 — write EtmemNodeState (Task 3.2)
+	// C3: Update metrics
+	agent.ManagedPodsTotal.Set(float64(len(desiredTasks)))
+
+	// C3: Write EtmemNodeState
+	nodeTasks := make([]etmemv1.NodeTask, 0, len(desiredTasks))
+	for projectName, taskInfo := range desiredTasks {
+		nodeTasks = append(nodeTasks, etmemv1.NodeTask{
+			ProjectName: projectName,
+			PolicyRef:   taskInfo.PolicyRef,
+			PodName:     taskInfo.PodName,
+			PodUID:      taskInfo.PodUID,
+			State:       "running",
+		})
+	}
+	nodeStatus := &etmemv1.EtmemNodeStateStatus{
+		NodeName: nodeName,
+		Tasks:    nodeTasks,
+		Metrics:  &etmemv1.NodeMetrics{TotalManagedPods: len(desiredTasks)},
+	}
+	if err := nsWriter.WriteStatus(ctx, nodeStatus); err != nil {
+		logger.Error(err, "failed to write NodeState")
+	}
 
 	return nil
 }

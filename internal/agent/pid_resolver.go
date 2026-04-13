@@ -9,6 +9,29 @@ import (
 	"strings"
 )
 
+// BuildCgroupRelPath constructs the cgroup v1 relative path for a Kubernetes pod.
+// Supports both cgroupfs and systemd cgroup drivers:
+//   - cgroupfs: memory/kubepods/pod<uid>/cgroup.procs
+//   - systemd:  memory/kubepods.slice/kubepods-pod<uid>.slice/cgroup.procs
+// MVP uses cgroupfs convention; the caller can override by passing a full path.
+func BuildCgroupRelPath(podUID string, qosClass string) string {
+	// Normalize QoS class to cgroup dir name
+	var qosDir string
+	switch strings.ToLower(qosClass) {
+	case "guaranteed":
+		qosDir = ""
+	case "burstable":
+		qosDir = "burstable/"
+	default:
+		qosDir = "besteffort/"
+	}
+	// cgroup v1 cgroupfs driver path: memory/kubepods/<qos>/pod<uid>/
+	if qosDir != "" {
+		return fmt.Sprintf("memory/kubepods/%spod%s", qosDir, podUID)
+	}
+	return fmt.Sprintf("memory/kubepods/pod%s", podUID)
+}
+
 type ResolvedProcess struct {
 	PID   int
 	Name  string

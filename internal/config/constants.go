@@ -25,8 +25,8 @@ const (
 	DefaultProfile = "moderate"
 
 	// Default circuit breaker thresholds
-	DefaultPodRestartThreshold     = 3
-	DefaultNodePSIThresholdPercent = 80
+	DefaultPodRestartThreshold = 5
+	DefaultNodePSIThreshold    = 70
 
 	// Config file temp directory (inside Agent container)
 	EtmemConfigDir = "/tmp/etmem-configs"
