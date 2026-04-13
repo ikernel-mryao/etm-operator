@@ -44,7 +44,7 @@ func TestPolicyReconciler_FetchesPolicy(t *testing.T) {
 			Engine:        etmemv1.EngineSpec{Type: "slide", Profile: "moderate"},
 		},
 	}
-	client := fake.NewClientBuilder().WithScheme(s).WithObjects(policy).Build()
+	client := fake.NewClientBuilder().WithScheme(s).WithObjects(policy).WithStatusSubresource(policy).Build()
 	r := &PolicyReconciler{Client: client, Scheme: s}
 
 	result, err := r.Reconcile(context.Background(), reconcile.Request{

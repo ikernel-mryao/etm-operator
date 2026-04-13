@@ -37,9 +37,17 @@ func (r *PolicyReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 
 	logger.Info("Reconciling EtmemPolicy", "name", policy.Name, "namespace", policy.Namespace)
 
-	// Phase 1 skeleton: validates policy exists and logs reconcile.
-	// Full status aggregation is wired in Task 3.3.
-	// The Agent (not Operator) handles actual etmem task lifecycle.
+	summary, err := AggregateForPolicy(ctx, r.Client, policy.Namespace, policy.Name)
+	if err != nil {
+		logger.Error(err, "failed to aggregate NodeState")
+		return ctrl.Result{}, err
+	}
+	policy.Status.Summary = summary
+	if err := r.Status().Update(ctx, &policy); err != nil {
+		logger.Error(err, "failed to update policy status")
+		return ctrl.Result{}, err
+	}
+
 	return ctrl.Result{RequeueAfter: 30 * time.Second}, nil
 }
 
