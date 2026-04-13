@@ -20,3 +20,13 @@ build-agent:
 	go build -o bin/etmem-agent ./cmd/agent/
 
 build: build-operator build-agent
+
+OPERATOR_IMG ?= etmem-operator:latest
+AGENT_IMG ?= etmem-agent:latest
+
+.PHONY: docker-build-operator docker-build-agent docker-build
+docker-build-operator:
+	docker build -t $(OPERATOR_IMG) -f build/operator/Dockerfile .
+docker-build-agent:
+	docker build -t $(AGENT_IMG) -f build/agent/Dockerfile .
+docker-build: docker-build-operator docker-build-agent
