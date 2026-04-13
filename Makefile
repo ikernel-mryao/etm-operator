@@ -1,5 +1,5 @@
 MODULE = github.com/openeuler/etmem-operator
-CONTROLLER_GEN = go run sigs.k8s.io/controller-tools/cmd/controller-gen@v0.14.0
+CONTROLLER_GEN = go run sigs.k8s.io/controller-tools/cmd/controller-gen@v0.20.1
 
 .PHONY: generate manifests test build-operator build-agent build
 
