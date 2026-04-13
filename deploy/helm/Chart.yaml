@@ -1,0 +1,6 @@
+apiVersion: v2
+name: etmem-operator
+description: Kubernetes Operator for etmem memory tiering
+type: application
+version: 0.1.0
+appVersion: "0.1.0"

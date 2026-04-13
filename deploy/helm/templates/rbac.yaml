@@ -1,0 +1,67 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: etmem-operator
+rules:
+  - apiGroups: ["etmem.openeuler.io"]
+    resources: ["etmempolicies"]
+    verbs: ["get", "list", "watch", "update"]
+  - apiGroups: ["etmem.openeuler.io"]
+    resources: ["etmempolicies/status"]
+    verbs: ["get", "update", "patch"]
+  - apiGroups: ["etmem.openeuler.io"]
+    resources: ["etmemnodestates"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: etmem-agent
+rules:
+  - apiGroups: ["etmem.openeuler.io"]
+    resources: ["etmempolicies"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["etmem.openeuler.io"]
+    resources: ["etmemnodestates"]
+    verbs: ["get", "list", "create", "update", "delete"]
+  - apiGroups: ["etmem.openeuler.io"]
+    resources: ["etmemnodestates/status"]
+    verbs: ["get", "update", "patch"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["nodes"]
+    verbs: ["get"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: etmem-operator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: etmem-operator
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Values.serviceAccount.operator.name }}
+    namespace: {{ .Release.Namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: etmem-agent
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: etmem-agent
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Values.serviceAccount.agent.name }}
+    namespace: {{ .Release.Namespace }}

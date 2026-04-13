@@ -1,0 +1,17 @@
+operator:
+  image: etmem-operator:v0.1.0
+  replicas: 1
+
+agent:
+  image: etmem-agent:v0.1.0
+  reconcileInterval: 30s
+  socketName: etmemd_socket
+
+rbac:
+  create: true
+
+serviceAccount:
+  operator:
+    name: etmem-operator
+  agent:
+    name: etmem-agent

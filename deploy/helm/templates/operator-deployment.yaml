@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: etmem-operator
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.operator.replicas }}
+  selector:
+    matchLabels:
+      app: etmem-operator
+  template:
+    metadata:
+      labels:
+        app: etmem-operator
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.operator.name }}
+      containers:
+        - name: operator
+          image: {{ .Values.operator.image }}
+          args:
+            - --metrics-bind-address=:8080
+            - --health-probe-bind-address=:8081
+          ports:
+            - containerPort: 8080
+              name: metrics
+            - containerPort: 8081
+              name: health
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8081
+            initialDelaySeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8081
+            initialDelaySeconds: 5

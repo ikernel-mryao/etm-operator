@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: etmem-agent
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: etmem-agent
+  template:
+    metadata:
+      labels:
+        app: etmem-agent
+    spec:
+      hostPID: true
+      serviceAccountName: {{ .Values.serviceAccount.agent.name }}
+      containers:
+        - name: agent
+          image: {{ .Values.agent.image }}
+          args:
+            - --reconcile-interval={{ .Values.agent.reconcileInterval }}
+            - --socket-name={{ .Values.agent.socketName }}
+          securityContext:
+            privileged: false
+            capabilities:
+              add: [SYS_PTRACE]
+            runAsUser: 0
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          volumeMounts:
+            - name: etmemd-socket
+              mountPath: /var/run/etmemd
+            - name: host-proc
+              mountPath: /host/proc
+              readOnly: true
+            - name: host-cgroup
+              mountPath: /host/sys/fs/cgroup
+              readOnly: true
+            - name: etmem-bin
+              mountPath: /usr/bin/etmem
+              readOnly: true
+      volumes:
+        - name: etmemd-socket
+          hostPath:
+            path: /var/run/etmemd
+            type: DirectoryOrCreate
+        - name: host-proc
+          hostPath:
+            path: /proc
+            type: Directory
+        - name: host-cgroup
+          hostPath:
+            path: /sys/fs/cgroup
+            type: Directory
+        - name: etmem-bin
+          hostPath:
+            path: /usr/bin/etmem
+            type: File
