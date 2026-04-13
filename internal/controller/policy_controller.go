@@ -1,3 +1,6 @@
+// PolicyReconciler 负责监听 EtmemPolicy 并聚合状态。
+// 职责：聚合各节点 EtmemNodeState 状态到 Policy.Status，不管理任务生命周期。
+// 任务生命周期由 Agent 自治管理，Operator 仅提供全局视图。
 package controller
 
 import (

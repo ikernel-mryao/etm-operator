@@ -1,3 +1,6 @@
+// Agent 是 etmem-operator 的节点侧组件，通过 DaemonSet 部署到每个节点。
+// 职责：自治推导本节点任务，将匹配的 Pod 转换为 etmem 配置并管理其生命周期。
+// 架构定位：Agent 自主决策任务执行，Operator 仅聚合状态，避免中心化瓶颈。
 package main
 
 import (
@@ -63,7 +66,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	// S1: Fetch node labels at startup
+	// 启动时一次性获取节点标签，避免每次 reconcile 重复查询。
+	// 节点标签变更需重启 Agent pod 才能生效（符合 DaemonSet 滚动更新语义）。
 	var node corev1.Node
 	if err := k8sClient.Get(context.Background(), types.NamespacedName{Name: nodeName}, &node); err != nil {
 		logger.Error(err, "unable to get node")
@@ -94,6 +98,8 @@ func main() {
 		cancel()
 	}()
 
+	// 固定间隔 reconcile 模式：每个节点独立推导任务，无需等待中心化调度。
+	// 间隔内发生的 Policy/Pod 变更会在下一轮 reconcile 生效。
 	ticker := time.NewTicker(reconcileInterval)
 	defer ticker.Stop()
 
@@ -120,6 +126,13 @@ type desiredTaskInfo struct {
 	PodUID    string
 }
 
+// agentReconcile 执行节点级任务推导的 5 步 reconcile 流程：
+// 1. 列出所有 EtmemPolicy
+// 2. 列出所有 Pod（客户端侧通过 MatchPodToPolicy 过滤）
+// 3. 构建期望任务集合（匹配 Pod → 解析 PID → 生成配置）
+// 4. Diff：停止不再需要的任务
+// 5. 启动新任务
+// 最后更新 EtmemNodeState 反映当前节点观测状态。
 func agentReconcile(
 	ctx context.Context,
 	k8sClient client.Client,

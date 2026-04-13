@@ -1,3 +1,6 @@
+// TaskManager 管理 etmem 任务的生命周期（启动/停止）。
+// StopTask 容忍 transport 错误：etmemd 可能已停止或任务不存在，StopTask 需幂等。
+// 即使 etmemd CLI 返回错误，仍删除本地配置文件和内存状态，避免泄漏。
 package agent
 
 import (

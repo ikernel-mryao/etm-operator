@@ -1,3 +1,7 @@
+// Profile 预设提供三种开箱即用的内存分级策略：
+// conservative：保守策略，适用生产核心业务（低扫描频率、高内存阈值）
+// moderate：中庸策略，适用通用场景（默认，平衡性能和内存回收）
+// aggressive：激进策略，适用批处理/离线任务（高扫描频率、低内存阈值）
 package engine
 
 import (

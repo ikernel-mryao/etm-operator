@@ -1,3 +1,7 @@
+// CircuitBreaker 实现两级熔断保护机制，避免 etmem 内存回收导致业务受损。
+// Pod 级熔断：容器 OOMKilled 或重启次数超阈值 → 跳过该 Pod
+// 节点级熔断：内存 PSI avg10 超阈值 → 停止节点所有 etmem 任务
+// 设计原则：熔断后不自动恢复，需人工介入排查后手动重启（spec.suspend）。
 package agent
 
 import (

@@ -17,7 +17,9 @@ const (
 	// Agent reconcile interval
 	DefaultReconcileInterval = 30 * time.Second
 
-	// Host path mounts inside Agent container
+	// 宿主机路径约定：Agent 容器通过 hostPath 挂载访问宿主机资源
+	// HostProcPath 用于读取进程信息（/proc/<pid>/comm, /proc/<pid>/status）
+	// HostCgroupPath 用于读取 cgroup 层级（memory/kubepods/pod<uid>/cgroup.procs）
 	HostProcPath   = "/host/proc"
 	HostCgroupPath = "/host/sys/fs/cgroup"
 

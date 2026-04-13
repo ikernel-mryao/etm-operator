@@ -1,3 +1,6 @@
+// Operator 是 etmem-operator 的中心化组件，通过 Deployment 部署。
+// 职责：监听 EtmemPolicy，聚合各节点 EtmemNodeState 状态到 Policy.Status。
+// 架构定位：仅负责状态聚合和 Policy 校验，不管理任务生命周期（由 Agent 自治）。
 package main
 
 import (

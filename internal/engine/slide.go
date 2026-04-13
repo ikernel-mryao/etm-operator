@@ -1,3 +1,9 @@
+// SlideEngine 负责生成 etmem slide 引擎的配置文件。
+// 配置文件格式（INI 风格）：
+//   [project] 定义全局扫描参数（loop、interval、内存阈值等）
+//   [engine]  声明引擎类型为 slide
+//   [task]    每个进程对应一个 task 块，定义换出策略（T、swap_threshold 等）
+// 参数映射：Kubernetes API SlideParams → etmem CLI 配置字段
 package engine
 
 import (

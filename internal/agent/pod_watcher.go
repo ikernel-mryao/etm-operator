@@ -1,3 +1,5 @@
+// MatchPodToPolicy 检查 Pod 是否应被该 EtmemPolicy 管理（在本节点上）。
+// 匹配逻辑：namespace 相同 → Pod 调度到本节点 → nodeSelector 匹配 → labelSelector 匹配
 package agent
 
 import (
@@ -7,8 +9,6 @@ import (
 
 	etmemv1 "github.com/openeuler/etmem-operator/api/v1alpha1"
 )
-
-// MatchPodToPolicy checks whether a Pod should be managed by the given EtmemPolicy on this node.
 func MatchPodToPolicy(pod *corev1.Pod, policy *etmemv1.EtmemPolicy, nodeName string, nodeLabels map[string]string) bool {
 	if policy.Spec.Suspend {
 		return false

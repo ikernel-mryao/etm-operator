@@ -1,3 +1,6 @@
+// NodeStateWriter 负责写入 EtmemNodeState 状态资源。
+// 采用 create-then-update 模式：首次写入先创建对象，再更新 status 子资源。
+// Kubernetes 要求 status 子资源必须通过 client.Status().Update() 单独更新。
 package agent
 
 import (

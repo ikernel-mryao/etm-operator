@@ -9,11 +9,9 @@ import (
 	"strings"
 )
 
-// BuildCgroupRelPath constructs the cgroup v1 relative path for a Kubernetes pod.
-// Supports both cgroupfs and systemd cgroup drivers:
-//   - cgroupfs: memory/kubepods/pod<uid>/cgroup.procs
-//   - systemd:  memory/kubepods.slice/kubepods-pod<uid>.slice/cgroup.procs
-// MVP uses cgroupfs convention; the caller can override by passing a full path.
+// BuildCgroupRelPath 构造 Kubernetes Pod 的 cgroup v1 相对路径。
+// cgroup v1 cgroupfs 驱动路径约定：memory/kubepods/<qos>/pod<uid>/
+// QoS 类映射：Guaranteed → 无中间层，Burstable → burstable/，BestEffort → besteffort/
 func BuildCgroupRelPath(podUID string, qosClass string) string {
 	// Normalize QoS class to cgroup dir name
 	var qosDir string
