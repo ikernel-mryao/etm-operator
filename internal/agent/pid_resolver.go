@@ -76,6 +76,7 @@ func NewPIDResolver(procRoot, cgroupRoot string) *PIDResolver {
 }
 
 // ResolvePIDs 收集 pod cgroup 下所有 PID（含容器子 cgroup），然后按进程名过滤。
+// 如果 processNames 为空，返回所有进程（Pod 全进程模式）。
 // cgroup v1 中 pod 级 cgroup.procs 通常为空，PID 位于 cri-containerd-*.scope 等子目录。
 func (r *PIDResolver) ResolvePIDs(cgroupRelPath string, processNames []string) ([]ResolvedProcess, error) {
 	podCgroupDir := filepath.Join(r.cgroupRoot, cgroupRelPath)
@@ -87,13 +88,14 @@ func (r *PIDResolver) ResolvePIDs(cgroupRelPath string, processNames []string) (
 	for _, n := range processNames {
 		nameSet[n] = true
 	}
+	filterByName := len(nameSet) > 0
 	var result []ResolvedProcess
 	for _, pid := range pids {
 		comm, err := r.readComm(pid)
 		if err != nil {
 			continue
 		}
-		if !nameSet[comm] {
+		if filterByName && !nameSet[comm] {
 			continue
 		}
 		rss, _ := r.ReadRSSKB(pid)

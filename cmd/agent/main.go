@@ -95,6 +95,16 @@ func main() {
 	cb := agent.NewCircuitBreaker(config.DefaultPodRestartThreshold, config.DefaultNodePSIThreshold, "")
 	nsWriter := agent.NewNodeStateWriter(k8sClient, nodeName)
 
+	// Bootstrap: restore running task map from NodeState to survive restarts
+	var existingNodeState etmemv1.EtmemNodeState
+	nsKey := types.NamespacedName{Name: nodeName}
+	if err := k8sClient.Get(context.Background(), nsKey, &existingNodeState); err == nil {
+		recovered := tm.BootstrapFromNodeState(existingNodeState.Status.Tasks)
+		logger.Info("Bootstrapped running tasks from NodeState", "recovered", recovered)
+	} else {
+		logger.V(1).Info("No existing NodeState found, starting fresh")
+	}
+
 	logger.Info("Agent starting", "node", nodeName, "interval", reconcileInterval)
 
 	ctx, cancel := context.WithCancel(context.Background())
@@ -224,20 +234,32 @@ func agentReconcile(
 			} else {
 				cgroupPath = agent.BuildCgroupRelPath(string(pod.UID), qosClass)
 			}
-			pids, err := pidResolver.ResolvePIDs(cgroupPath, policy.Spec.ProcessFilter.Names)
+			var processNames []string
+			if policy.Spec.ProcessFilter != nil {
+				processNames = policy.Spec.ProcessFilter.Names
+			}
+			pids, err := pidResolver.ResolvePIDs(cgroupPath, processNames)
 			if err != nil {
 				logger.V(1).Info("PID resolution failed", "pod", pod.Name, "cgroupPath", cgroupPath, "error", err)
 				continue
 			}
 			if len(pids) == 0 {
-				logger.V(1).Info("No matching PIDs found", "pod", pod.Name, "cgroupPath", cgroupPath, "filter", policy.Spec.ProcessFilter.Names)
+				filterDesc := "<all>"
+				if policy.Spec.ProcessFilter != nil {
+					filterDesc = fmt.Sprintf("%v", policy.Spec.ProcessFilter.Names)
+				}
+				logger.V(1).Info("No matching PIDs found", "pod", pod.Name, "cgroupPath", cgroupPath, "filter", filterDesc)
 				continue
 			}
 			logger.Info("Matched pod", "pod", pod.Name, "pids", len(pids), "policy", policy.Name)
 
-			processes := make([]engine.ProcessTarget, 0, len(pids))
+			seenNames := make(map[string]bool)
+			var processes []engine.ProcessTarget
 			for _, pid := range pids {
-				processes = append(processes, engine.ProcessTarget{Name: pid.Name})
+				if !seenNames[pid.Name] {
+					processes = append(processes, engine.ProcessTarget{Name: pid.Name})
+					seenNames[pid.Name] = true
+				}
 			}
 			projectName := agent.ProjectName(policy.Namespace, pod.Name)
 			configContent := slideEngine.GenerateConfig(projectName, processes, params)

@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"sync"
 
+	etmemv1 "github.com/openeuler/etmem-operator/api/v1alpha1"
 	"github.com/openeuler/etmem-operator/internal/transport"
 )
 
@@ -103,4 +104,25 @@ func (tm *TaskManager) RunningTasks() []string {
 		tasks = append(tasks, name)
 	}
 	return tasks
+}
+
+// BootstrapFromNodeState restores the running map from previously-reported NodeState tasks.
+// Called once on Agent startup to avoid losing track of tasks that etmemd is still executing.
+// Only tasks in "running" state with an existing config file are recovered.
+func (tm *TaskManager) BootstrapFromNodeState(tasks []etmemv1.NodeTask) int {
+	tm.mu.Lock()
+	defer tm.mu.Unlock()
+	recovered := 0
+	for _, task := range tasks {
+		if task.State != "running" {
+			continue
+		}
+		configPath := filepath.Join(tm.configDir, task.ProjectName+".conf")
+		if _, err := os.Stat(configPath); err != nil {
+			continue
+		}
+		tm.running[task.ProjectName] = configPath
+		recovered++
+	}
+	return recovered
 }
