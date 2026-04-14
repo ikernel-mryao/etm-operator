@@ -81,6 +81,16 @@ func main() {
 	pidResolver := agent.NewPIDResolver(config.HostProcPath, config.HostCgroupPath)
 	slideEngine := &engine.SlideEngine{}
 
+	// 运行时检测 cgroup 驱动类型：systemd vs cgroupfs
+	// 通过探测 /host/sys/fs/cgroup/memory/kubepods.slice 是否存在来判断
+	useSystemdCgroup := false
+	if _, err := os.Stat(config.HostCgroupPath + "/memory/kubepods.slice"); err == nil {
+		useSystemdCgroup = true
+		logger.Info("Detected systemd cgroup driver")
+	} else {
+		logger.Info("Using cgroupfs cgroup driver")
+	}
+
 	// C3: Initialize CircuitBreaker and NodeStateWriter
 	cb := agent.NewCircuitBreaker(config.DefaultPodRestartThreshold, config.DefaultNodePSIThreshold, "")
 	nsWriter := agent.NewNodeStateWriter(k8sClient, nodeName)
@@ -110,7 +120,7 @@ func main() {
 			return
 		case <-ticker.C:
 			start := time.Now()
-			if err := agentReconcile(ctx, k8sClient, tm, pidResolver, slideEngine, cb, nsWriter, nodeName, nodeLabels, logger); err != nil {
+			if err := agentReconcile(ctx, k8sClient, tm, pidResolver, slideEngine, cb, nsWriter, nodeName, nodeLabels, useSystemdCgroup, logger); err != nil {
 				logger.Error(err, "reconcile failed")
 				agent.ReconcileErrors.Inc()
 			}
@@ -143,6 +153,7 @@ func agentReconcile(
 	nsWriter *agent.NodeStateWriter,
 	nodeName string,
 	nodeLabels map[string]string,
+	useSystemdCgroup bool,
 	logger logr.Logger,
 ) error {
 	// C3: Check node-level circuit breaker
@@ -164,6 +175,8 @@ func agentReconcile(
 	if err := k8sClient.List(ctx, &podList); err != nil {
 		return fmt.Errorf("list pods: %w", err)
 	}
+
+	logger.V(1).Info("Reconcile cycle", "policies", len(policyList.Items), "pods", len(podList.Items))
 
 	// 3. Build desired task set
 	desiredTasks := make(map[string]desiredTaskInfo)
@@ -203,13 +216,24 @@ func agentReconcile(
 				continue
 			}
 
-			// C2: Build proper cgroup path
+			// 根据 cgroup 驱动类型选择正确的路径格式
 			qosClass := string(pod.Status.QOSClass)
-			cgroupPath := agent.BuildCgroupRelPath(string(pod.UID), qosClass)
+			var cgroupPath string
+			if useSystemdCgroup {
+				cgroupPath = agent.BuildCgroupRelPathSystemd(string(pod.UID), qosClass)
+			} else {
+				cgroupPath = agent.BuildCgroupRelPath(string(pod.UID), qosClass)
+			}
 			pids, err := pidResolver.ResolvePIDs(cgroupPath, policy.Spec.ProcessFilter.Names)
-			if err != nil || len(pids) == 0 {
+			if err != nil {
+				logger.V(1).Info("PID resolution failed", "pod", pod.Name, "cgroupPath", cgroupPath, "error", err)
 				continue
 			}
+			if len(pids) == 0 {
+				logger.V(1).Info("No matching PIDs found", "pod", pod.Name, "cgroupPath", cgroupPath, "filter", policy.Spec.ProcessFilter.Names)
+				continue
+			}
+			logger.Info("Matched pod", "pod", pod.Name, "pids", len(pids), "policy", policy.Name)
 
 			processes := make([]engine.ProcessTarget, 0, len(pids))
 			for _, pid := range pids {

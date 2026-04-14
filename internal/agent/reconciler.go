@@ -38,7 +38,8 @@ func (tm *TaskManager) StartTask(ctx context.Context, req TaskRequest) error {
 		return fmt.Errorf("create config dir: %w", err)
 	}
 	configPath := filepath.Join(tm.configDir, req.ProjectName+".conf")
-	if err := os.WriteFile(configPath, []byte(req.ConfigContent), 0644); err != nil {
+	// etmemd 安全要求：配置文件权限必须为 600 或 400
+	if err := os.WriteFile(configPath, []byte(req.ConfigContent), 0600); err != nil {
 		return fmt.Errorf("write config: %w", err)
 	}
 	if err := tm.transport.ObjAdd(ctx, configPath); err != nil {

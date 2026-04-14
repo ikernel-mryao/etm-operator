@@ -14,9 +14,18 @@ spec:
         app: etmem-operator
     spec:
       serviceAccountName: {{ .Values.serviceAccount.operator.name }}
+      {{- with .Values.operator.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.operator.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: operator
           image: {{ .Values.operator.image }}
+          imagePullPolicy: {{ .Values.operator.imagePullPolicy | default "IfNotPresent" }}
           args:
             - --metrics-bind-address=:8080
             - --health-probe-bind-address=:8081

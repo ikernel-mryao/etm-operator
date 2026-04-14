@@ -10,10 +10,41 @@ import (
 )
 
 // BuildCgroupRelPath 构造 Kubernetes Pod 的 cgroup v1 相对路径。
-// cgroup v1 cgroupfs 驱动路径约定：memory/kubepods/<qos>/pod<uid>/
-// QoS 类映射：Guaranteed → 无中间层，Burstable → burstable/，BestEffort → besteffort/
+// 同时支持 cgroupfs 和 systemd 两种 cgroup 驱动：
+//   - cgroupfs: memory/kubepods/<qos>/pod<uid>/
+//   - systemd:  memory/kubepods.slice/kubepods-<qos>.slice/kubepods-<qos>-pod<uid_underscored>.slice/
+//
+// 通过探测 cgroupRoot 下是否存在 "kubepods.slice" 目录来自动选择驱动模式。
 func BuildCgroupRelPath(podUID string, qosClass string) string {
-	// Normalize QoS class to cgroup dir name
+	return buildCgroupRelPathForDriver(podUID, qosClass, false)
+}
+
+// BuildCgroupRelPathSystemd 明确使用 systemd cgroup 驱动路径格式。
+func BuildCgroupRelPathSystemd(podUID string, qosClass string) string {
+	return buildCgroupRelPathForDriver(podUID, qosClass, true)
+}
+
+func buildCgroupRelPathForDriver(podUID string, qosClass string, systemd bool) string {
+	if systemd {
+		return buildSystemdCgroupPath(podUID, qosClass)
+	}
+	return buildCgroupfsPath(podUID, qosClass)
+}
+
+// systemd 驱动：UID 中的 '-' 需替换为 '_'，路径使用 .slice 后缀
+func buildSystemdCgroupPath(podUID string, qosClass string) string {
+	uidEscaped := strings.ReplaceAll(podUID, "-", "_")
+	switch strings.ToLower(qosClass) {
+	case "guaranteed":
+		return fmt.Sprintf("memory/kubepods.slice/kubepods-pod%s.slice", uidEscaped)
+	case "burstable":
+		return fmt.Sprintf("memory/kubepods.slice/kubepods-burstable.slice/kubepods-burstable-pod%s.slice", uidEscaped)
+	default:
+		return fmt.Sprintf("memory/kubepods.slice/kubepods-besteffort.slice/kubepods-besteffort-pod%s.slice", uidEscaped)
+	}
+}
+
+func buildCgroupfsPath(podUID string, qosClass string) string {
 	var qosDir string
 	switch strings.ToLower(qosClass) {
 	case "guaranteed":
@@ -23,7 +54,6 @@ func BuildCgroupRelPath(podUID string, qosClass string) string {
 	default:
 		qosDir = "besteffort/"
 	}
-	// cgroup v1 cgroupfs driver path: memory/kubepods/<qos>/pod<uid>/
 	if qosDir != "" {
 		return fmt.Sprintf("memory/kubepods/%spod%s", qosDir, podUID)
 	}
@@ -45,11 +75,13 @@ func NewPIDResolver(procRoot, cgroupRoot string) *PIDResolver {
 	return &PIDResolver{procRoot: procRoot, cgroupRoot: cgroupRoot}
 }
 
+// ResolvePIDs 收集 pod cgroup 下所有 PID（含容器子 cgroup），然后按进程名过滤。
+// cgroup v1 中 pod 级 cgroup.procs 通常为空，PID 位于 cri-containerd-*.scope 等子目录。
 func (r *PIDResolver) ResolvePIDs(cgroupRelPath string, processNames []string) ([]ResolvedProcess, error) {
-	procsPath := filepath.Join(r.cgroupRoot, cgroupRelPath, "cgroup.procs")
-	pids, err := r.readCgroupProcs(procsPath)
+	podCgroupDir := filepath.Join(r.cgroupRoot, cgroupRelPath)
+	pids, err := r.collectAllPIDs(podCgroupDir)
 	if err != nil {
-		return nil, fmt.Errorf("read cgroup.procs at %s: %w", procsPath, err)
+		return nil, fmt.Errorf("collect PIDs under %s: %w", podCgroupDir, err)
 	}
 	nameSet := make(map[string]bool, len(processNames))
 	for _, n := range processNames {
@@ -68,6 +100,35 @@ func (r *PIDResolver) ResolvePIDs(cgroupRelPath string, processNames []string) (
 		result = append(result, ResolvedProcess{PID: pid, Name: comm, RSSKB: rss})
 	}
 	return result, nil
+}
+
+// collectAllPIDs 读取目录自身及直接子目录中的 cgroup.procs，合并所有 PID。
+func (r *PIDResolver) collectAllPIDs(dir string) ([]int, error) {
+	var allPIDs []int
+
+	// 读取当前目录的 cgroup.procs
+	if pids, err := r.readCgroupProcs(filepath.Join(dir, "cgroup.procs")); err == nil {
+		allPIDs = append(allPIDs, pids...)
+	}
+
+	// 遍历直接子目录（容器 scope），读取各自的 cgroup.procs
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		if len(allPIDs) > 0 {
+			return allPIDs, nil
+		}
+		return nil, err
+	}
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			continue
+		}
+		childProcs := filepath.Join(dir, entry.Name(), "cgroup.procs")
+		if pids, err := r.readCgroupProcs(childProcs); err == nil {
+			allPIDs = append(allPIDs, pids...)
+		}
+	}
+	return allPIDs, nil
 }
 
 func (r *PIDResolver) readCgroupProcs(path string) ([]int, error) {

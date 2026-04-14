@@ -30,8 +30,9 @@ const (
 	DefaultPodRestartThreshold = 5
 	DefaultNodePSIThreshold    = 70
 
-	// Config file temp directory (inside Agent container)
-	EtmemConfigDir = "/tmp/etmem-configs"
+	// etmemd 在宿主机读取配置文件，路径必须宿主机和 Agent 容器都可访问。
+	// Agent 通过 hostPath 将此目录挂载到容器同一路径，确保 etmemd 能找到文件。
+	EtmemConfigDir = "/var/run/etmem/configs"
 
 	// Project name format: <namespace>-<podName>
 	// Max 64 chars per etmem constraint

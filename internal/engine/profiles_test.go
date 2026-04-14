@@ -17,7 +17,7 @@ func TestGetProfile_ValidProfiles(t *testing.T) {
 	}{
 		{"conservative", "conservative", 3, 5, 3},
 		{"moderate", "moderate", 1, 1, 1},
-		{"aggressive", "aggressive", 1, 1, 0},
+		{"aggressive", "aggressive", 1, 1, 1},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

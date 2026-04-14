@@ -28,7 +28,7 @@ func TestSlideEngine_GenerateConfig_Moderate(t *testing.T) {
 	assert.Contains(t, config, "[task]")
 	assert.Contains(t, config, "value=mysqld")
 	assert.Contains(t, config, "T=1")
-	assert.Contains(t, config, "swap_flag=yes")
+	assert.Contains(t, config, "swap_flag=no")
 }
 
 func TestSlideEngine_GenerateConfig_MultipleProcesses(t *testing.T) {

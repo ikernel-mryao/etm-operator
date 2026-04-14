@@ -27,9 +27,9 @@ func NewExecTransport(socketName string, executor CommandExecutor) *ExecTranspor
 }
 
 func (t *ExecTransport) ObjAdd(ctx context.Context, configPath string) error {
-	_, err := t.executor.Execute(ctx, config.EtmemBinaryPath, "obj", "add", "-f", configPath, "-s", t.socketName)
+	out, err := t.executor.Execute(ctx, config.EtmemBinaryPath, "obj", "add", "-f", configPath, "-s", t.socketName)
 	if err != nil {
-		return fmt.Errorf("etmem obj add failed: %w", err)
+		return fmt.Errorf("etmem obj add failed: %w, output: %s", err, string(out))
 	}
 	return nil
 }
@@ -43,9 +43,9 @@ func (t *ExecTransport) ObjDel(ctx context.Context, configPath string) error {
 }
 
 func (t *ExecTransport) ProjectStart(ctx context.Context, projectName string) error {
-	_, err := t.executor.Execute(ctx, config.EtmemBinaryPath, "project", "start", "-n", projectName, "-s", t.socketName)
+	out, err := t.executor.Execute(ctx, config.EtmemBinaryPath, "project", "start", "-n", projectName, "-s", t.socketName)
 	if err != nil {
-		return fmt.Errorf("etmem project start failed: %w", err)
+		return fmt.Errorf("etmem project start failed: %w, output: %s", err, string(out))
 	}
 	return nil
 }

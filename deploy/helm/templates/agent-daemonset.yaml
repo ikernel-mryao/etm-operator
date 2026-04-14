@@ -13,10 +13,22 @@ spec:
         app: etmem-agent
     spec:
       hostPID: true
+      # etmemd 使用抽象 Unix socket（内核网络命名空间），必须共享宿主机网络才能访问
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
       serviceAccountName: {{ .Values.serviceAccount.agent.name }}
+      {{- with .Values.agent.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.agent.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: agent
           image: {{ .Values.agent.image }}
+          imagePullPolicy: {{ .Values.agent.imagePullPolicy | default "IfNotPresent" }}
           args:
             - --reconcile-interval={{ .Values.agent.reconcileInterval }}
             - --socket-name={{ .Values.agent.socketName }}
@@ -31,8 +43,6 @@ spec:
                 fieldRef:
                   fieldPath: spec.nodeName
           volumeMounts:
-            - name: etmemd-socket
-              mountPath: /var/run/etmemd
             - name: host-proc
               mountPath: /host/proc
               readOnly: true
@@ -42,14 +52,20 @@ spec:
             - name: etmem-bin
               mountPath: /usr/bin/etmem
               readOnly: true
+            # etmem 为动态链接，需要宿主机的动态链接器和共享库
+            - name: host-lib64
+              mountPath: /lib64
+              readOnly: true
+            - name: host-usr-lib64
+              mountPath: /usr/lib64
+              readOnly: true
+            # etmemd 在宿主机侧读取配置文件，Agent 写入的路径必须宿主机可见
+            - name: etmem-config-dir
+              mountPath: /var/run/etmem/configs
             - name: containerd-sock
               mountPath: /run/containerd/containerd.sock
               readOnly: true
       volumes:
-        - name: etmemd-socket
-          hostPath:
-            path: /var/run/etmemd
-            type: DirectoryOrCreate
         - name: host-proc
           hostPath:
             path: /proc
@@ -62,6 +78,18 @@ spec:
           hostPath:
             path: /usr/bin/etmem
             type: File
+        - name: host-lib64
+          hostPath:
+            path: /lib64
+            type: Directory
+        - name: host-usr-lib64
+          hostPath:
+            path: /usr/lib64
+            type: Directory
+        - name: etmem-config-dir
+          hostPath:
+            path: /var/run/etmem/configs
+            type: DirectoryOrCreate
         - name: containerd-sock
           hostPath:
             path: /run/containerd/containerd.sock

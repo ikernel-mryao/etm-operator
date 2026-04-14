@@ -56,7 +56,8 @@ func (e *SlideEngine) WriteConfigFile(dir, projectName string, processes []Proce
 	}
 	content := e.GenerateConfig(projectName, processes, params)
 	path := filepath.Join(dir, projectName+".conf")
-	if err := os.WriteFile(path, []byte(content), 0644); err != nil {
+	// etmemd 安全要求：配置文件权限必须为 600 或 400
+	if err := os.WriteFile(path, []byte(content), 0600); err != nil {
 		return "", fmt.Errorf("write config file: %w", err)
 	}
 	return path, nil

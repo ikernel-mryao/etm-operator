@@ -20,24 +20,27 @@ type SlideParams struct {
 	T                  int
 	MaxThreads         int
 	SwapFlag           string
-	SwapThreshold      string // e.g. "10g"
+	SwapThreshold      string // 为空时使用百分比策略，适用于容器场景
 }
 
+// swap_flag=yes 会触发 ioctl VMA_SCAN_ADD_FLAGS(0x1000)，
+// 在部分内核版本（如 5.10 FusionOS）下导致 idle_pages 读取返回 0 字节。
+// MVP 统一使用 swap_flag=no 以保证兼容性。
 var profiles = map[string]SlideParams{
 	"conservative": {
 		Loop: 3, Interval: 5, Sleep: 3,
 		SysMemThreshold: 70, SwapCacheHighWmark: 15, SwapCacheLowWmark: 10,
-		T: 3, MaxThreads: 1, SwapFlag: "yes", SwapThreshold: "10g",
+		T: 3, MaxThreads: 1, SwapFlag: "no",
 	},
 	"moderate": {
 		Loop: 1, Interval: 1, Sleep: 1,
 		SysMemThreshold: 50, SwapCacheHighWmark: 10, SwapCacheLowWmark: 6,
-		T: 1, MaxThreads: 1, SwapFlag: "yes", SwapThreshold: "10g",
+		T: 1, MaxThreads: 1, SwapFlag: "no",
 	},
 	"aggressive": {
-		Loop: 1, Interval: 1, Sleep: 0,
+		Loop: 1, Interval: 1, Sleep: 1,
 		SysMemThreshold: 30, SwapCacheHighWmark: 5, SwapCacheLowWmark: 3,
-		T: 1, MaxThreads: 2, SwapFlag: "yes", SwapThreshold: "10g",
+		T: 1, MaxThreads: 2, SwapFlag: "no",
 	},
 }
 
