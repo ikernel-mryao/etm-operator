@@ -54,6 +54,14 @@ func main() {
 		os.Exit(1)
 	}
 
+	if err := (&controller.PodReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		logger.Error(err, "unable to create controller", "controller", "PodReconciler")
+		os.Exit(1)
+	}
+
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
 		logger.Error(err, "unable to set up health check")
 		os.Exit(1)
