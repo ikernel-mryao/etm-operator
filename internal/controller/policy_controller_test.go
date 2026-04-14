@@ -40,7 +40,7 @@ func TestPolicyReconciler_FetchesPolicy(t *testing.T) {
 	policy := &etmemv1.EtmemPolicy{
 		ObjectMeta: metav1.ObjectMeta{Name: "test-policy", Namespace: "default"},
 		Spec: etmemv1.EtmemPolicySpec{
-			ProcessFilter: etmemv1.ProcessFilter{Names: []string{"mysqld"}},
+			ProcessFilter: &etmemv1.ProcessFilter{Names: []string{"mysqld"}},
 			Engine:        etmemv1.EngineSpec{Type: "slide", Profile: "moderate"},
 		},
 	}
@@ -63,7 +63,7 @@ func TestPolicyReconciler_RejectsWorkloadRefs(t *testing.T) {
 			WorkloadRefs: []etmemv1.WorkloadRef{
 				{APIGroup: "apps", Kind: "Deployment", Name: "my-app"},
 			},
-			ProcessFilter: etmemv1.ProcessFilter{Names: []string{"java"}},
+			ProcessFilter: &etmemv1.ProcessFilter{Names: []string{"java"}},
 			Engine:        etmemv1.EngineSpec{Type: "slide", Profile: "moderate"},
 		},
 	}

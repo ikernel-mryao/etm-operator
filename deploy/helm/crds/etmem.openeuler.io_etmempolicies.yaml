@@ -113,19 +113,17 @@ spec:
                 description: NodeSelector limits which nodes this policy applies to.
                 type: object
               processFilter:
-                description: ProcessFilter specifies which processes to manage within
-                  matched containers.
+                description: |-
+                  ProcessFilter specifies which processes to manage within matched containers.
+                  If nil, all processes in the container cgroup are managed.
                 properties:
                   names:
                     description: |-
                       Names is the list of process names to manage (matched against /proc/<pid>/comm).
-                      Each name must be <= 15 characters.
+                      Each name must be <= 15 characters. If empty, all processes are managed.
                     items:
                       type: string
-                    minItems: 1
                     type: array
-                required:
-                - names
                 type: object
               selector:
                 description: Selector selects Pods by labels. Mutually exclusive with
@@ -201,7 +199,6 @@ spec:
                 type: array
             required:
             - engine
-            - processFilter
             type: object
           status:
             properties:

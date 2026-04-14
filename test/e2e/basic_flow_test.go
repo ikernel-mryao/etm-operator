@@ -42,7 +42,7 @@ func TestBasicFlow_CreatePolicyAndCheckNodeState(t *testing.T) {
 			Selector: &metav1.LabelSelector{
 				MatchLabels: map[string]string{"etmem-e2e": "true"},
 			},
-			ProcessFilter: etmemv1.ProcessFilter{Names: []string{"sleep"}},
+			ProcessFilter: &etmemv1.ProcessFilter{Names: []string{"sleep"}},
 			Engine:        etmemv1.EngineSpec{Type: "slide", Profile: "conservative"},
 		},
 	}

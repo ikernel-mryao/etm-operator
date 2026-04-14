@@ -18,7 +18,7 @@ func TestMatchPodToPolicy_LabelSelector(t *testing.T) {
 				MatchLabels: map[string]string{"app": "mysql"},
 			},
 			NodeSelector:  map[string]string{"node-role": "worker"},
-			ProcessFilter: etmemv1.ProcessFilter{Names: []string{"mysqld"}},
+			ProcessFilter: &etmemv1.ProcessFilter{Names: []string{"mysqld"}},
 			Engine:        etmemv1.EngineSpec{Type: "slide", Profile: "moderate"},
 		},
 	}
@@ -38,7 +38,7 @@ func TestMatchPodToPolicy_WrongNamespace(t *testing.T) {
 		ObjectMeta: metav1.ObjectMeta{Name: "p1", Namespace: "prod"},
 		Spec: etmemv1.EtmemPolicySpec{
 			Selector:      &metav1.LabelSelector{MatchLabels: map[string]string{"app": "mysql"}},
-			ProcessFilter: etmemv1.ProcessFilter{Names: []string{"mysqld"}},
+			ProcessFilter: &etmemv1.ProcessFilter{Names: []string{"mysqld"}},
 			Engine:        etmemv1.EngineSpec{Type: "slide"},
 		},
 	}
@@ -54,7 +54,7 @@ func TestMatchPodToPolicy_Suspended(t *testing.T) {
 		ObjectMeta: metav1.ObjectMeta{Name: "p1", Namespace: "default"},
 		Spec: etmemv1.EtmemPolicySpec{
 			Selector:      &metav1.LabelSelector{MatchLabels: map[string]string{"app": "mysql"}},
-			ProcessFilter: etmemv1.ProcessFilter{Names: []string{"mysqld"}},
+			ProcessFilter: &etmemv1.ProcessFilter{Names: []string{"mysqld"}},
 			Engine:        etmemv1.EngineSpec{Type: "slide"},
 			Suspend:       true,
 		},

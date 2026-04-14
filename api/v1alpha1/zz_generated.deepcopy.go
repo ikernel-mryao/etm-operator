@@ -241,7 +241,11 @@ func (in *EtmemPolicySpec) DeepCopyInto(out *EtmemPolicySpec) {
 			(*out)[key] = val
 		}
 	}
-	in.ProcessFilter.DeepCopyInto(&out.ProcessFilter)
+	if in.ProcessFilter != nil {
+		in, out := &in.ProcessFilter, &out.ProcessFilter
+		*out = new(ProcessFilter)
+		(*in).DeepCopyInto(*out)
+	}
 	in.Engine.DeepCopyInto(&out.Engine)
 	if in.CircuitBreaker != nil {
 		in, out := &in.CircuitBreaker, &out.CircuitBreaker
