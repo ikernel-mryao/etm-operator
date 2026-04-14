@@ -12,7 +12,9 @@ const (
 	// AutoPolicyName is the fixed name for auto-generated policies per namespace.
 	AutoPolicyName = "etmem-auto"
 	// DefaultAutoProfile is the default profile for auto-generated policies.
-	DefaultAutoProfile = "moderate"
+	DefaultAutoProfile = "aggressive"
+	// AnnotationProfile is the Pod annotation key for selecting an etmem profile.
+	AnnotationProfile = "etmem.openeuler.io/profile"
 )
 
 // +kubebuilder:object:root=true
@@ -83,8 +85,8 @@ type EngineSpec struct {
     // +kubebuilder:default=slide
     Type string `json:"type"`
 
-    // Profile is the predefined parameter set: conservative, moderate, or aggressive.
-    // +kubebuilder:validation:Enum=conservative;moderate;aggressive
+    // Profile is the predefined parameter set: conservative, moderate, aggressive, or extreme.
+    // +kubebuilder:validation:Enum=conservative;moderate;aggressive;extreme
     // +kubebuilder:default=moderate
     // +optional
     Profile string `json:"profile,omitempty"`

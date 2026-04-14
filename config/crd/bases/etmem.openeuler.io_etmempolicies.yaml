@@ -92,11 +92,12 @@ spec:
                   profile:
                     default: moderate
                     description: 'Profile is the predefined parameter set: conservative,
-                      moderate, or aggressive.'
+                      moderate, aggressive, or extreme.'
                     enum:
                     - conservative
                     - moderate
                     - aggressive
+                    - extreme
                     type: string
                   type:
                     default: slide
