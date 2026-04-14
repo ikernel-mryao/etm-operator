@@ -44,3 +44,5 @@ spec:
               path: /readyz
               port: 8081
             initialDelaySeconds: 5
+          resources:
+            {{- toYaml .Values.operator.resources | nindent 12 }}
