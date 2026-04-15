@@ -318,6 +318,8 @@ func agentReconcile(
 		if !tm.IsRunning(taskInfo.Request.ProjectName) {
 			if err := tm.StartTask(ctx, taskInfo.Request); err != nil {
 				logger.Error(err, "failed to start task", "project", taskInfo.Request.ProjectName)
+			} else {
+				logger.Info("Task started successfully", "project", taskInfo.Request.ProjectName, "pod", taskInfo.PodName)
 			}
 		}
 	}
