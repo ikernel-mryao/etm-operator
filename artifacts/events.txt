@@ -1,0 +1,31 @@
+--- Events ---
+default        2m57s       Warning   Unhealthy           pod/dbservice-xx5lb                             Readiness probe failed: dial tcp 10.254.83.232:65432: connect: connection refused
+default        2m48s       Warning   Unhealthy           pod/appconfig-rttwv                             Readiness probe failed: dial tcp 10.254.84.67:8080: connect: connection refused
+etmem-system   2m32s       Normal    Scheduled           pod/etmem-operator-7f6d56759c-l2fgm             Successfully assigned etmem-system/etmem-operator-7f6d56759c-l2fgm to cp0
+etmem-system   2m32s       Normal    SuccessfulCreate    replicaset/etmem-operator-7f6d56759c            Created pod: etmem-operator-7f6d56759c-l2fgm
+etmem-system   2m32s       Normal    ScalingReplicaSet   deployment/etmem-operator                       Scaled up replica set etmem-operator-7f6d56759c to 1
+etmem-system   2m32s       Normal    AddedInterface      pod/etmem-operator-7f6d56759c-l2fgm             Add eth0 [10.254.84.73/32] from k8s-pod-network
+etmem-system   2m31s       Normal    Started             pod/etmem-operator-7f6d56759c-l2fgm             Started container operator
+etmem-system   2m31s       Normal    Created             pod/etmem-operator-7f6d56759c-l2fgm             Created container operator
+etmem-system   2m31s       Normal    Pulled              pod/etmem-operator-7f6d56759c-l2fgm             Container image "etmem-operator:v0.2.0" already present on machine
+default        2m22s       Warning   Unhealthy           pod/resourcemgmt-54l9x                          Readiness probe failed: dial tcp 10.254.83.213:8081: connect: connection refused
+default        2m5s        Warning   Unhealthy           pod/iam-lxzk8                                   Readiness probe failed: dial tcp 10.254.84.33:9999: connect: connection refused
+etmem-system   119s        Warning   Unhealthy           pod/etmem-operator-796585d75f-q5k7j             Readiness probe failed: HTTP probe failed with statuscode: 404
+etmem-system   112s        Normal    SuccessfulCreate    daemonset/etmem-agent                           Created pod: etmem-agent-jd975
+etmem-system   112s        Normal    Killing             pod/etmem-agent-q7cmr                           Stopping container agent
+etmem-system   112s        Normal    Scheduled           pod/etmem-agent-jd975                           Successfully assigned etmem-system/etmem-agent-jd975 to cp0
+etmem-system   111s        Normal    Pulled              pod/etmem-agent-jd975                           Container image "etmem-agent:v0.2.0" already present on machine
+etmem-system   111s        Normal    Created             pod/etmem-agent-jd975                           Created container agent
+etmem-system   111s        Normal    Started             pod/etmem-agent-jd975                           Started container agent
+default        73s         Warning   Unhealthy           pod/osmgmt-6tbn5                                Readiness probe failed: dial tcp 10.254.84.68:8081: connect: connection refused
+default        67s         Warning   Unhealthy           pod/portal-r8jwt                                Readiness probe failed: dial tcp 10.254.84.6:8080: connect: connection refused
+default        62s         Warning   Unhealthy           pod/servermgmt-pwwsb                            Readiness probe failed: dial tcp 10.254.84.31:80: connect: connection refused
+default        61s         Warning   BackOff             pod/faultprediction-zqnh2                       Back-off restarting failed container faultprediction in pod faultprediction-zqnh2_default(54304e1e-5680-4927-a570-6928ef5faddf)
+default        58s         Warning   Unhealthy           pod/statistic-d7ztm                             Readiness probe failed: dial tcp 10.254.84.58:8085: connect: connection refused
+default        58s         Warning   Unhealthy           pod/webui-s6zqv                                 Readiness probe failed: dial tcp 10.254.84.43:8888: connect: connection refused
+default        48s         Warning   Unhealthy           pod/certmgmt-sv45z                              Readiness probe failed: dial tcp 10.254.84.9:8080: connect: connection refused
+default        32s         Warning   Unhealthy           pod/netdevmonitor-cz56w                         Readiness probe failed: dial tcp 10.254.84.36:8080: connect: connection refused
+default        21s         Warning   Unhealthy           pod/netdevadapter-w486w                         Readiness probe failed: dial tcp 10.254.84.20:8080: connect: connection refused
+default        17s         Warning   Unhealthy           pod/deploy-pt6gm                                Readiness probe failed: dial tcp 10.254.84.49:8080: connect: connection refused
+default        16s         Warning   Unhealthy           pod/taskmgmt-gnp8r                              Readiness probe failed: dial tcp 10.254.84.57:8080: connect: connection refused
+etmem-system   2s          Warning   Unhealthy           pod/etmem-operator-7f6d56759c-l2fgm             Readiness probe failed: HTTP probe failed with statuscode: 404

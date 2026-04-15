@@ -1,0 +1,197 @@
+--- kubectl get all -n etmem-system ---
+NAME                                  READY   STATUS    RESTARTS   AGE
+pod/etmem-agent-jd975                 1/1     Running   0          111s
+pod/etmem-operator-796585d75f-q5k7j   0/1     Running   0          72m
+pod/etmem-operator-7f6d56759c-l2fgm   0/1     Running   0          2m31s
+
+NAME                         DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR                AGE
+daemonset.apps/etmem-agent   1         1         1       1            1           kubernetes.io/hostname=cp0   78m
+
+NAME                             READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/etmem-operator   0/1     1            0           78m
+
+NAME                                        DESIRED   CURRENT   READY   AGE
+replicaset.apps/etmem-operator-796585d75f   1         1         0       72m
+replicaset.apps/etmem-operator-7f6d56759c   1         1         0       2m31s
+
+--- CRDs ---
+etmemnodestates.etmem.openeuler.io                                2026-04-14T03:16:01Z
+etmempolicies.etmem.openeuler.io                                  2026-04-14T03:16:01Z
+
+--- EtmemPolicy ---
+apiVersion: v1
+items:
+- apiVersion: etmem.openeuler.io/v1alpha1
+  kind: EtmemPolicy
+  metadata:
+    creationTimestamp: "2026-04-15T07:07:05Z"
+    generation: 3
+    labels:
+      etmem.openeuler.io/auto-generated: "true"
+    name: etmem-auto
+    namespace: default
+    resourceVersion: "11438931"
+    uid: 339ab8be-051e-4c1f-a3c3-5c78a3ddf5dd
+  spec:
+    engine:
+      profile: conservative
+      type: slide
+    selector:
+      matchLabels:
+        etmem.openeuler.io/enable: "true"
+  status:
+    summary:
+      activeNodes: 1
+      managedPods: 1
+kind: List
+metadata:
+  resourceVersion: ""
+
+--- EtmemNodeState ---
+apiVersion: v1
+items:
+- apiVersion: etmem.openeuler.io/v1alpha1
+  kind: EtmemNodeState
+  metadata:
+    creationTimestamp: "2026-04-15T05:53:57Z"
+    generation: 1
+    name: cp0
+    resourceVersion: "11438078"
+    uid: e61cb95c-48b7-400a-bb55-be3a19819d7c
+  spec: {}
+  status:
+    etmemdReady: false
+    metrics:
+      totalManagedPods: 1
+    nodeName: cp0
+    socketReachable: false
+    tasks:
+    - podName: memhog-test
+      podUID: 33ac4c14-52af-4880-bd97-8d1931dae0b3
+      policyRef:
+        name: etmem-auto
+        namespace: default
+      projectName: default-memhog-test
+      state: running
+kind: List
+metadata:
+  resourceVersion: ""
+
+--- memhog-test pod ---
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    cni.projectcalico.org/containerID: c5bf08828b06e152a1ba5277c8e37eb7c78305b9a5dd17db9bbe74ea9e2f8639
+    cni.projectcalico.org/podIP: 10.254.84.72/32
+    cni.projectcalico.org/podIPs: 10.254.84.72/32
+    etmem.openeuler.io/profile: conservative
+    k8s.v1.cni.cncf.io/network-status: |-
+      [{
+          "name": "k8s-pod-network",
+          "ips": [
+              "10.254.84.72"
+          ],
+          "default": true,
+          "dns": {}
+      }]
+  creationTimestamp: "2026-04-15T07:07:05Z"
+  labels:
+    etmem.openeuler.io/enable: "true"
+    run: memhog-test
+  name: memhog-test
+  namespace: default
+  resourceVersion: "11438930"
+  uid: 33ac4c14-52af-4880-bd97-8d1931dae0b3
+spec:
+  containers:
+  - args:
+    - "128"
+    image: memhog:v1
+    imagePullPolicy: IfNotPresent
+    name: memhog-test
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-7skcq
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  nodeName: cp0
+  nodeSelector:
+    kubernetes.io/hostname: cp0
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Never
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: default
+  serviceAccountName: default
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 15
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 15
+  volumes:
+  - name: kube-api-access-7skcq
+    projected:
+      defaultMode: 420
+      sources:
+      - serviceAccountToken:
+          expirationSeconds: 3607
+          path: token
+      - configMap:
+          items:
+          - key: ca.crt
+            path: ca.crt
+          name: kube-root-ca.crt
+      - downwardAPI:
+          items:
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+            path: namespace
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2026-04-15T07:07:05Z"
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2026-04-15T07:07:06Z"
+    status: "True"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2026-04-15T07:07:06Z"
+    status: "True"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2026-04-15T07:07:05Z"
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - containerID: containerd://e0ac62ab2d0a7f440b211ba29b1694898e6f5c23d0fad0e607235067354614ba
+    image: docker.io/library/memhog:v1
+    imageID: sha256:888f78300830acbd16a619e93013b228055ab412b6b921f0ab8b52bdcd9e9eb8
+    lastState: {}
+    name: memhog-test
+    ready: true
+    restartCount: 0
+    started: true
+    state:
+      running:
+        startedAt: "2026-04-15T07:07:06Z"
+  hostIP: 10.0.0.1
+  phase: Running
+  podIP: 10.254.84.72
+  podIPs:
+  - ip: 10.254.84.72
+  qosClass: BestEffort
+  startTime: "2026-04-15T07:07:05Z"

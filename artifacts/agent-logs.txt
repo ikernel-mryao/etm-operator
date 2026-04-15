@@ -1,0 +1,31 @@
+--- Agent logs ---
+2026-04-15T07:10:31Z	INFO	agent	Detected systemd cgroup driver
+2026-04-15T07:10:31Z	INFO	agent	Bootstrapped running tasks from NodeState	{"recovered": 0}
+2026-04-15T07:10:31Z	INFO	agent	Agent starting	{"node": "cp0", "interval": "30s"}
+2026-04-15T07:11:01Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 245}
+2026-04-15T07:11:01Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T07:11:01Z	ERROR	agent	failed to start task	{"project": "default-memhog-test", "error": "obj add: etmem obj add failed: exit status 111, output: etmem connect to server failed: Connection refused\netmem_client_conn failed.\netmem: error 111\n\nUsage:\n    etmem obj add [options]\n    etmem obj del [options]\n    etmem obj help [options]\n\nOptions:\n    -f|--file <conf_file>       Add configuration file\n    -s|--socket <socket_name>   Socket name to connect\n\nNotes:\n    1. Configuration file must be given.\n    2. Socket name must be given.\n"}
+main.agentReconcile
+	/home/ygz/work/etmem-workspace/etmem-operator/cmd/agent/main.go:295
+main.main
+	/home/ygz/work/etmem-workspace/etmem-operator/cmd/agent/main.go:133
+runtime.main
+	/usr/local/go/src/runtime/proc.go:290
+2026-04-15T07:11:31Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 245}
+2026-04-15T07:11:31Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T07:11:31Z	ERROR	agent	failed to start task	{"project": "default-memhog-test", "error": "obj add: etmem obj add failed: exit status 111, output: etmem connect to server failed: Connection refused\netmem_client_conn failed.\netmem: error 111\n\nUsage:\n    etmem obj add [options]\n    etmem obj del [options]\n    etmem obj help [options]\n\nOptions:\n    -f|--file <conf_file>       Add configuration file\n    -s|--socket <socket_name>   Socket name to connect\n\nNotes:\n    1. Configuration file must be given.\n    2. Socket name must be given.\n"}
+main.agentReconcile
+	/home/ygz/work/etmem-workspace/etmem-operator/cmd/agent/main.go:295
+main.main
+	/home/ygz/work/etmem-workspace/etmem-operator/cmd/agent/main.go:133
+runtime.main
+	/usr/local/go/src/runtime/proc.go:290
+2026-04-15T07:12:01Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 245}
+2026-04-15T07:12:01Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T07:12:01Z	ERROR	agent	failed to start task	{"project": "default-memhog-test", "error": "obj add: etmem obj add failed: exit status 111, output: etmem connect to server failed: Connection refused\netmem_client_conn failed.\netmem: error 111\n\nUsage:\n    etmem obj add [options]\n    etmem obj del [options]\n    etmem obj help [options]\n\nOptions:\n    -f|--file <conf_file>       Add configuration file\n    -s|--socket <socket_name>   Socket name to connect\n\nNotes:\n    1. Configuration file must be given.\n    2. Socket name must be given.\n"}
+main.agentReconcile
+	/home/ygz/work/etmem-workspace/etmem-operator/cmd/agent/main.go:295
+main.main
+	/home/ygz/work/etmem-workspace/etmem-operator/cmd/agent/main.go:133
+runtime.main
+	/usr/local/go/src/runtime/proc.go:290
