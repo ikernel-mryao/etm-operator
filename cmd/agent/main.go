@@ -37,6 +37,16 @@ func init() {
 	utilruntime.Must(etmemv1.AddToScheme(scheme))
 }
 
+// isInfraProcess returns true for Kubernetes infrastructure container processes
+// (pause, sandbox, etc.) that should not be targeted for memory swap.
+func isInfraProcess(name string) bool {
+	switch name {
+	case "pause", "sandbox":
+		return true
+	}
+	return false
+}
+
 func main() {
 	var reconcileInterval time.Duration
 	var socketName string
@@ -253,13 +263,28 @@ func agentReconcile(
 			}
 			logger.Info("Matched pod", "pod", pod.Name, "pids", len(pids), "policy", policy.Name)
 
+			// Filter out infrastructure containers (pause/sandbox) and deduplicate.
+			// etmemd only supports one [task] per config file (last section wins),
+			// so we must ensure only application processes remain.
 			seenNames := make(map[string]bool)
 			var processes []engine.ProcessTarget
 			for _, pid := range pids {
+				if isInfraProcess(pid.Name) {
+					continue
+				}
 				if !seenNames[pid.Name] {
 					processes = append(processes, engine.ProcessTarget{Name: pid.Name})
 					seenNames[pid.Name] = true
 				}
+			}
+			if len(processes) == 0 {
+				logger.V(1).Info("No application processes after filtering infrastructure containers", "pod", pod.Name)
+				continue
+			}
+			if len(processes) > 1 {
+				logger.Info("Multiple application processes found; etmemd only supports one task per config, using first process",
+					"pod", pod.Name, "processes", len(processes), "selected", processes[0].Name)
+				processes = processes[:1]
 			}
 			projectName := agent.ProjectName(policy.Namespace, pod.Name)
 			configContent := slideEngine.GenerateConfig(projectName, processes, params)

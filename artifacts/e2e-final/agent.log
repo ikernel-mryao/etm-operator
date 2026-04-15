@@ -1,0 +1,10 @@
+2026-04-15T12:21:57Z	INFO	agent	Agent starting	{"node": "cp0", "interval": "30s"}
+2026-04-15T12:22:27Z	DEBUG	agent	Reconcile cycle	{"policies": 0, "pods": 241}
+2026-04-15T12:22:57Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:22:57Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:23:27Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:23:27Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:23:57Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:23:57Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:24:27Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:24:27Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}

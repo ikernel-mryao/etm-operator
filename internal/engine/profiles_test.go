@@ -39,7 +39,7 @@ func TestGetProfile_InvalidProfile(t *testing.T) {
 func TestGetProfile_ExtremeDistinguishing(t *testing.T) {
 	p, err := GetProfile("extreme")
 	require.NoError(t, err)
-	assert.Equal(t, 20, p.SysMemThreshold)
+	assert.Equal(t, 99, p.SysMemThreshold)
 	assert.Equal(t, 2, p.SwapCacheHighWmark)
 	assert.Equal(t, 1, p.SwapCacheLowWmark)
 }

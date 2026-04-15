@@ -27,25 +27,30 @@ type SlideParams struct {
 // swap_flag=yes 会触发 ioctl VMA_SCAN_ADD_FLAGS(0x1000)，
 // 在部分内核版本（如 5.10 FusionOS）下导致 idle_pages 读取返回 0 字节。
 // MVP 统一使用 swap_flag=no 以保证兼容性。
+//
+// sysmem_threshold 表示"系统可用内存低于该百分比时触发 swap"。
+// 在大内存机器（如 1TB+、可用 80%+）上，若阈值过低（如 30），
+// 则永远不会触发 swap。各 profile 阈值已调整为适用于大内存场景：
+// conservative=85, moderate=90, aggressive=95, extreme=99。
 var profiles = map[string]SlideParams{
 	"conservative": {
 		Loop: 3, Interval: 5, Sleep: 3,
-		SysMemThreshold: 70, SwapCacheHighWmark: 15, SwapCacheLowWmark: 10,
+		SysMemThreshold: 85, SwapCacheHighWmark: 15, SwapCacheLowWmark: 10,
 		T: 3, MaxThreads: 1, SwapFlag: "no",
 	},
 	"moderate": {
 		Loop: 1, Interval: 1, Sleep: 1,
-		SysMemThreshold: 50, SwapCacheHighWmark: 10, SwapCacheLowWmark: 6,
+		SysMemThreshold: 90, SwapCacheHighWmark: 10, SwapCacheLowWmark: 6,
 		T: 1, MaxThreads: 1, SwapFlag: "no",
 	},
 	"aggressive": {
 		Loop: 1, Interval: 1, Sleep: 1,
-		SysMemThreshold: 30, SwapCacheHighWmark: 5, SwapCacheLowWmark: 3,
+		SysMemThreshold: 95, SwapCacheHighWmark: 5, SwapCacheLowWmark: 3,
 		T: 1, MaxThreads: 2, SwapFlag: "no",
 	},
 	"extreme": {
 		Loop: 1, Interval: 1, Sleep: 1,
-		SysMemThreshold: 20, SwapCacheHighWmark: 2, SwapCacheLowWmark: 1,
+		SysMemThreshold: 99, SwapCacheHighWmark: 2, SwapCacheLowWmark: 1,
 		T: 1, MaxThreads: 2, SwapFlag: "no",
 	},
 }

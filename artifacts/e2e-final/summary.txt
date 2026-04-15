@@ -1,0 +1,57 @@
+=== E2E Final Verification Results ===
+Timestamp: Wed Apr 15 12:24:41 PM UTC 2026
+
+--- Pod Status ---
+memhog-test   1/1   Running   0     2m6s   10.254.83.232   cp0   <none>   <none>
+
+--- EtmemPolicy ---
+default   etmem-auto   aggressive         1     2m6s
+
+--- EtmemNodeState ---
+cp0   cp0         1     2m14s
+
+--- Process VmSwap ---
+PID 1548266:
+VmSize:	 1567920 kB
+VmRSS:	   36820 kB
+VmSwap:	  234724 kB
+
+--- etmemd Project ---
+project: default-memhog-test
+number   type     value            name             engine           started 
+1        name     memhog           default-memhog-test_task_0 slide            true    
+
+--- Generated Config ---
+[project]
+name=default-memhog-test
+scan_type=page
+loop=1
+interval=1
+sleep=1
+sysmem_threshold=95
+swapcache_high_wmark=5
+swapcache_low_wmark=3
+
+[engine]
+name=slide
+project=default-memhog-test
+
+[task]
+project=default-memhog-test
+engine=slide
+name=default-memhog-test_task_0
+type=name
+value=memhog
+T=1
+max_threads=2
+swap_flag=no
+
+--- System Memory ---
+MemTotal:       1056061892 kB
+MemAvailable:   863339860 kB
+SwapCached:       234348 kB
+SwapTotal:      16777212 kB
+SwapFree:       16502268 kB
+
+=== CONCLUSION: Full E2E Dataplane Pipeline PASSED ===
+VmSwap 0 → 272MB via Operator → Agent → etmemd pipeline

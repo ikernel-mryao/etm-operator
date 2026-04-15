@@ -4,6 +4,10 @@
 //   [engine]  声明引擎类型为 slide
 //   [task]    每个进程对应一个 task 块，定义换出策略（T、swap_threshold 等）
 // 参数映射：Kubernetes API SlideParams → etmem CLI 配置字段
+//
+// 重要限制：etmemd INI 解析器仅保留最后一个 [task] 段，
+// 因此调用方必须确保 processes 切片中只有一个元素。
+// Agent 在构建 processes 时已过滤基础设施容器并限制为单进程。
 package engine
 
 import (

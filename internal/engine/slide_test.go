@@ -22,7 +22,7 @@ func TestSlideEngine_GenerateConfig_Moderate(t *testing.T) {
 	assert.Contains(t, config, "loop=1")
 	assert.Contains(t, config, "interval=1")
 	assert.Contains(t, config, "sleep=1")
-	assert.Contains(t, config, "sysmem_threshold=50")
+	assert.Contains(t, config, "sysmem_threshold=90")
 	assert.Contains(t, config, "[engine]")
 	assert.Contains(t, config, "name=slide")
 	assert.Contains(t, config, "[task]")
