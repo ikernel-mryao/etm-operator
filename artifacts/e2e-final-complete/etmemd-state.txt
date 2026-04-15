@@ -1,0 +1,14 @@
+=== etmemd process & project state ===
+Date: Wed Apr 15 08:40:42 PM CST 2026
+
+--- etmemd process ---
+root     1522743  0.0  0.0 116900  7148 ?        S    20:21   0:00 sudo nohup /usr/bin/etmemd -s etmemd_socket -l 2
+root     1522746  0.2  0.0 236000  1908 ?        Sl   20:21   0:02 /usr/bin/etmemd -s etmemd_socket -l 2
+root     1524306  0.0  0.0 1819708 44696 ?       Ssl  20:21   0:00 /usr/local/bin/agent --reconcile-interval=30s --socket-name=etmemd_socket
+
+--- etmemd project show ---
+project: default-memhog-test
+number   type     value            name             engine           started 
+1        name     memhog           default-memhog-test_task_0 slide            true    
+
+--- etmemd nohup.out (last 50 lines) ---

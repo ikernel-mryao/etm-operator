@@ -1,0 +1,170 @@
+=== K8s Resource State ===
+Date: Wed Apr 15 08:41:14 PM CST 2026
+
+--- Pods (etmem-system) ---
+NAME                             READY   STATUS    RESTARTS   AGE    IP              NODE   NOMINATED NODE   READINESS GATES
+etmem-agent-rjlt7                1/1     Running   0          19m    10.0.0.1        cp0    <none>           <none>
+etmem-operator-9fbb64c9c-mrmkd   0/1     Running   0          124m   10.254.83.218   cp0    <none>           <none>
+
+--- Pods (default, etmem-related) ---
+NAME                                              READY   STATUS                   RESTARTS        AGE   IP              NODE   NOMINATED NODE   READINESS GATES
+aimgmt-rmhpp                                      1/1     Running                  126 (40m ago)   33h   10.254.84.44    cp0    <none>           <none>
+alertmanager-metric-manager-alertmanager-0        2/2     Running                  0               2d    10.254.84.24    cp0    <none>           <none>
+appconfig-rttwv                                   1/1     Running                  126 (33m ago)   33h   10.254.84.67    cp0    <none>           <none>
+artifactregistry-f7d85d776-94wz5                  1/1     Running                  0               2d    10.254.83.207   cp0    <none>           <none>
+artifactregistry-f7d85d776-t96lz                  0/1     Error                    1 (14d ago)     15d   10.254.84.17    cp0    <none>           <none>
+certmgmt-sv45z                                    1/1     Running                  124 (34m ago)   33h   10.254.84.9     cp0    <none>           <none>
+clustermgmt-c7464d75f-67psj                       1/1     Running                  122 (35m ago)   2d    10.254.84.39    cp0    <none>           <none>
+clustermgmt-c7464d75f-cfxpd                       0/1     Error                    1 (14d ago)     15d   10.254.83.211   cp0    <none>           <none>
+db-operator-controller-manager-6b79cfb56c-84wnp   1/1     Running                  0               2d    10.254.84.1     cp0    <none>           <none>
+db-operator-controller-manager-6b79cfb56c-qnbph   0/1     Error                    1 (14d ago)     15d   10.254.83.219   cp0    <none>           <none>
+dbservice-65lhg                                   1/1     Running                  0               29m   10.254.84.79    cp0    <none>           <none>
+deploy-pt6gm                                      1/1     Running                  126 (35m ago)   33h   10.254.84.49    cp0    <none>           <none>
+devicediscovery-tk6jx                             1/1     Running                  126 (35m ago)   33h   10.254.84.64    cp0    <none>           <none>
+devmgmt-8jp7p                                     1/1     Running                  127 (39m ago)   33h   10.254.84.54    cp0    <none>           <none>
+event-9zj4g                                       1/1     Running                  122 (38m ago)   33h   10.254.84.48    cp0    <none>           <none>
+faultprediction-zqnh2                             1/1     Running                  377 (29m ago)   33h   10.254.84.38    cp0    <none>           <none>
+fskmcservice-v2sjz                                1/1     Running                  0               33h   10.254.84.37    cp0    <none>           <none>
+grafana-966cd96df-g6txn                           0/1     Error                    1               15d   10.254.84.72    cp0    <none>           <none>
+grafana-966cd96df-kp98g                           1/1     Running                  285 (32m ago)   2d    10.254.83.236   cp0    <none>           <none>
+iam-lxzk8                                         1/1     Running                  126 (40m ago)   33h   10.254.84.33    cp0    <none>           <none>
+influxproxy-7csws                                 1/1     Running                  0               33h   10.254.84.25    cp0    <none>           <none>
+initializationservice-6985f7799-6ksds             2/2     Running                  302 (30m ago)   2d    10.254.83.229   cp0    <none>           <none>
+initializationservice-6985f7799-bs6lq             0/2     ContainerStatusUnknown   2 (14d ago)     15d   10.254.84.0     cp0    <none>           <none>
+inventory-d2vcb                                   1/1     Running                  126 (40m ago)   33h   10.254.84.28    cp0    <none>           <none>
+ipconfig-pxb8h                                    1/1     Running                  126 (34m ago)   33h   10.254.84.66    cp0    <none>           <none>
+keymgmt-tkxwr                                     1/1     Running                  0               33h   10.254.84.29    cp0    <none>           <none>
+kube-state-metrics-f47946ddd-f8lz2                1/1     Running                  0               2d    10.254.84.60    cp0    <none>           <none>
+kube-state-metrics-f47946ddd-fsn8g                0/1     Error                    1 (14d ago)     15d   10.254.83.246   cp0    <none>           <none>
+license-558648f575-q5gmn                          0/1     Error                    1               15d   10.254.84.3     cp0    <none>           <none>
+license-558648f575-t455t                          1/1     Running                  122 (41m ago)   2d    10.254.84.27    cp0    <none>           <none>
+logmgmt-65vfx                                     1/1     Running                  118 (37m ago)   33h   10.254.84.69    cp0    <none>           <none>
+memhog-test                                       1/1     Running                  0               18m   10.254.83.232   cp0    <none>           <none>
+metric-manager-grafana-7d5b4b8544-r8rn6           0/2     ContainerStatusUnknown   5 (14d ago)     15d   10.254.83.250   cp0    <none>           <none>
+metric-manager-grafana-7d5b4b8544-swkt7           2/2     Running                  377 (29m ago)   2d    10.254.83.215   cp0    <none>           <none>
+metric-manager-operator-64fbff55d-26l69           1/1     Running                  0               2d    10.254.84.17    cp0    <none>           <none>
+metric-manager-operator-64fbff55d-qdt9j           0/1     ContainerStatusUnknown   2 (14d ago)     15d   10.254.83.240   cp0    <none>           <none>
+monitormgmtservice-747c647d48-gms2g               0/1     Error                    1 (14d ago)     15d   10.254.84.24    cp0    <none>           <none>
+monitormgmtservice-747c647d48-q2m86               1/1     Running                  187 (29m ago)   2d    10.254.84.10    cp0    <none>           <none>
+mqservice-server-0                                1/1     Running                  0               2d    10.254.84.19    cp0    <none>           <none>
+netdevadapter-w486w                               1/1     Running                  122 (37m ago)   33h   10.254.84.20    cp0    <none>           <none>
+netdevmonitor-cz56w                               1/1     Running                  126 (34m ago)   33h   10.254.84.36    cp0    <none>           <none>
+node-daemon-gkcxz                                 1/1     Running                  0               15d   10.254.175.12   wk1    <none>           <none>
+node-daemon-wskkq                                 1/1     Running                  127 (38m ago)   33h   10.254.84.11    cp0    <none>           <none>
+node-exporter-87tfs                               1/1     Running                  0               15d   10.0.0.2        wk1    <none>           <none>
+node-exporter-t9c7n                               1/1     Running                  0               33h   10.0.0.1        cp0    <none>           <none>
+nodeproxy-85r2t                                   1/1     Running                  0               33h   10.254.83.255   cp0    <none>           <none>
+opsmgmtservice-56b498fd67-mknmk                   0/1     Error                    1 (14d ago)     15d   10.254.83.237   cp0    <none>           <none>
+opsmgmtservice-56b498fd67-n8rl5                   1/1     Running                  231 (30m ago)   2d    10.254.84.8     cp0    <none>           <none>
+osmgmt-6tbn5                                      1/1     Running                  122 (32m ago)   33h   10.254.84.68    cp0    <none>           <none>
+portal-r8jwt                                      1/1     Running                  122 (38m ago)   33h   10.254.84.6     cp0    <none>           <none>
+prometheus-685b674c7b-bfpj8                       0/1     Error                    1               15d   10.254.84.56    cp0    <none>           <none>
+prometheus-685b674c7b-jhtj5                       1/1     Running                  126 (40m ago)   2d    10.254.83.243   cp0    <none>           <none>
+prometheus-metric-manager-prometheus-0            2/2     Running                  0               2d    10.254.84.21    cp0    <none>           <none>
+redis-cluster-redis-cluster-0                     1/1     Running                  0               2d    10.254.84.63    cp0    <none>           <none>
+redis-operator-54f9f9547-452n8                    1/1     Running                  0               2d    10.254.83.211   cp0    <none>           <none>
+redis-operator-54f9f9547-vl8tr                    0/1     Error                    1               15d   10.254.84.13    cp0    <none>           <none>
+redis-sentinel-redis-cluster-0                    1/1     Running                  0               2d    10.254.83.245   cp0    <none>           <none>
+resourcemgmt-54l9x                                1/1     Running                  122 (41m ago)   33h   10.254.83.213   cp0    <none>           <none>
+search-86866798b8-7hb4l                           0/1     Error                    1 (14d ago)     15d   10.254.83.210   cp0    <none>           <none>
+search-86866798b8-rgh98                           1/1     Running                  122 (42m ago)   2d    10.254.84.50    cp0    <none>           <none>
+servermgmt-pwwsb                                  1/1     Running                  126 (38m ago)   33h   10.254.84.31    cp0    <none>           <none>
+sftp-d74vc                                        1/1     Running                  377 (29m ago)   33h   10.254.84.65    cp0    <none>           <none>
+snmp-w7s79                                        1/1     Running                  126 (32m ago)   33h   10.254.84.45    cp0    <none>           <none>
+snmpreceiver-csfmj                                1/1     Running                  130 (38m ago)   33h   10.0.0.1        cp0    <none>           <none>
+sso-c7c57c789-76vsq                               1/1     Running                  122 (41m ago)   2d    10.254.83.224   cp0    <none>           <none>
+sso-c7c57c789-c8kbz                               0/1     ContainerStatusUnknown   1 (14d ago)     15d   10.254.84.5     cp0    <none>           <none>
+statistic-d7ztm                                   1/1     Running                  122 (38m ago)   33h   10.254.84.58    cp0    <none>           <none>
+statsmgmtservice-8486b9585c-9vtzg                 1/1     Running                  99 (19m ago)    2d    10.254.84.0     cp0    <none>           <none>
+statsmgmtservice-8486b9585c-ns7rv                 0/1     ContainerStatusUnknown   1 (14d ago)     15d   10.254.84.19    cp0    <none>           <none>
+systemmgmtservice-7d59b78484-dsw6g                0/1     ContainerStatusUnknown   1 (14d ago)     15d   10.254.83.205   cp0    <none>           <none>
+systemmgmtservice-7d59b78484-l6vhh                1/1     Running                  302 (30m ago)   2d    10.254.84.22    cp0    <none>           <none>
+taskmgmt-gnp8r                                    1/1     Running                  126 (35m ago)   33h   10.254.84.57    cp0    <none>           <none>
+tftp-k9872                                        1/1     Running                  0               33h   10.0.0.1        cp0    <none>           <none>
+tsdb-0                                            1/1     Running                  0               2d    10.254.84.2     cp0    <none>           <none>
+webui-s6zqv                                       1/1     Running                  122 (40m ago)   33h   10.254.84.43    cp0    <none>           <none>
+
+--- EtmemPolicy ---
+apiVersion: v1
+items:
+- apiVersion: etmem.openeuler.io/v1alpha1
+  kind: EtmemPolicy
+  metadata:
+    creationTimestamp: "2026-04-15T12:22:35Z"
+    generation: 1
+    labels:
+      etmem.openeuler.io/auto-generated: "true"
+    name: etmem-auto
+    namespace: default
+    resourceVersion: "11612917"
+    uid: 3a671660-9151-4867-a3e3-2a30b905ff3e
+  spec:
+    engine:
+      profile: aggressive
+      type: slide
+    selector:
+      matchLabels:
+        etmem.openeuler.io/enable: "true"
+  status:
+    summary:
+      activeNodes: 1
+      managedPods: 1
+kind: List
+metadata:
+  resourceVersion: ""
+
+--- EtmemNodeState ---
+apiVersion: v1
+items:
+- apiVersion: etmem.openeuler.io/v1alpha1
+  kind: EtmemNodeState
+  metadata:
+    creationTimestamp: "2026-04-15T12:22:27Z"
+    generation: 1
+    name: cp0
+    resourceVersion: "11612848"
+    uid: ec10ec17-ac23-4a36-9c4b-e4baa608c175
+  spec: {}
+  status:
+    etmemdReady: false
+    metrics:
+      totalManagedPods: 1
+    nodeName: cp0
+    socketReachable: false
+    tasks:
+    - podName: memhog-test
+      podUID: ec6b2ec4-ca48-424b-bac8-91f7ef4b0fde
+      policyRef:
+        name: etmem-auto
+        namespace: default
+      projectName: default-memhog-test
+      state: running
+kind: List
+metadata:
+  resourceVersion: ""
+
+--- CRDs ---
+etmemnodestates.etmem.openeuler.io                                2026-04-14T03:16:01Z
+etmempolicies.etmem.openeuler.io                                  2026-04-14T03:16:01Z
+
+--- Events (last 20, etmem-related) ---
+etmem-system   40m         Normal    Started             pod/etmem-agent-8qk9m                          Started container agent
+etmem-system   38m         Normal    Killing             pod/etmem-agent-8qk9m                          Stopping container agent
+etmem-system   38m         Normal    SuccessfulCreate    daemonset/etmem-agent                          Created pod: etmem-agent-cpw9m
+etmem-system   38m         Normal    Scheduled           pod/etmem-agent-cpw9m                          Successfully assigned etmem-system/etmem-agent-cpw9m to cp0
+etmem-system   38m         Normal    Started             pod/etmem-agent-cpw9m                          Started container agent
+etmem-system   38m         Normal    Created             pod/etmem-agent-cpw9m                          Created container agent
+etmem-system   38m         Normal    Pulled              pod/etmem-agent-cpw9m                          Container image "etmem-agent:v0.2.0" already present on machine
+etmem-system   28m         Normal    Killing             pod/etmem-agent-cpw9m                          Stopping container agent
+etmem-system   28m         Normal    SuccessfulCreate    daemonset/etmem-agent                          Created pod: etmem-agent-qzfxp
+etmem-system   28m         Normal    Pulled              pod/etmem-agent-qzfxp                          Container image "etmem-agent:v0.2.0" already present on machine
+etmem-system   28m         Normal    Scheduled           pod/etmem-agent-qzfxp                          Successfully assigned etmem-system/etmem-agent-qzfxp to cp0
+etmem-system   28m         Normal    Started             pod/etmem-agent-qzfxp                          Started container agent
+etmem-system   28m         Normal    Created             pod/etmem-agent-qzfxp                          Created container agent
+etmem-system   19m         Normal    Pulled              pod/etmem-agent-rjlt7                          Container image "etmem-agent:v0.2.0" already present on machine
+etmem-system   19m         Normal    SuccessfulCreate    daemonset/etmem-agent                          Created pod: etmem-agent-rjlt7
+etmem-system   19m         Normal    Scheduled           pod/etmem-agent-rjlt7                          Successfully assigned etmem-system/etmem-agent-rjlt7 to cp0
+etmem-system   19m         Normal    Killing             pod/etmem-agent-qzfxp                          Stopping container agent
+etmem-system   19m         Normal    Created             pod/etmem-agent-rjlt7                          Created container agent
+etmem-system   19m         Normal    Started             pod/etmem-agent-rjlt7                          Started container agent
+etmem-system   4m14s       Warning   Unhealthy           pod/etmem-operator-9fbb64c9c-mrmkd             Readiness probe failed: HTTP probe failed with statuscode: 404

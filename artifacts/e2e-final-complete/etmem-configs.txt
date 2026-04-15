@@ -1,0 +1,6 @@
+=== Effective etmem configs ===
+Date: Wed Apr 15 08:41:14 PM CST 2026
+
+--- /var/run/etmem/configs/default-memhog-test.conf (perms: 600) ---
+cat: /var/run/etmem/configs/default-memhog-test.conf: Permission denied
+

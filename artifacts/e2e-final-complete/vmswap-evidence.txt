@@ -1,0 +1,22 @@
+=== VmSwap/VmRSS Evidence ===
+Date: Wed Apr 15 08:40:11 PM CST 2026
+
+--- Current memhog-test Pod status ---
+NAME          READY   STATUS    RESTARTS   AGE   IP              NODE   NOMINATED NODE   READINESS GATES
+memhog-test   1/1     Running   0          17m   10.254.83.232   cp0    <none>           <none>
+
+--- Process 1548266 /proc/status (LIVE) ---
+Name:	memhog
+VmPeak:	 1567920 kB
+VmSize:	 1567920 kB
+VmRSS:	    1580 kB
+VmSwap:	  277508 kB
+Threads:	70
+
+--- Process 1548266 /proc/smaps_rollup ---
+(not available)
+
+--- VmSwap timeline (from verification logs) ---
+Before etmem: VmRSS=270,792 kB, VmSwap=0 kB
+After  etmem: VmRSS=1,540 kB,   VmSwap=272,156 kB
+Snapshot:     VmRSS=36,820 kB,  VmSwap=234,724 kB (captured at summary time)

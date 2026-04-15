@@ -1,0 +1,3 @@
+FROM etmem-agent:v0.2.0
+COPY agent /usr/local/bin/agent
+ENTRYPOINT ["/usr/local/bin/agent"]

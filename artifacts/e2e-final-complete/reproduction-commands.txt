@@ -1,0 +1,101 @@
+=================================================================
+ etmem-operator v0.2.0 数据面 E2E 成功复现步骤
+ 日期: 2026-04-15/16
+ 环境: FusionOS 23, 5.10.0-278 kernel, cgroup v1, 1TB RAM, 16G swap
+=================================================================
+
+--- 前置条件 ---
+
+# 1. 确认内核模块已加载
+sudo lsmod | grep etmem
+#   etmem_swap   etmem_scan 必须都在
+
+# 2. 确认 swap 启用
+swapon -s
+free -h | grep -i swap
+
+# 3. 确认 swappiness
+cat /proc/sys/vm/swappiness   # 建议 >= 60
+
+--- 启动 etmemd ---
+
+# 4. 先查找旧 etmemd PID
+pgrep -f /usr/bin/etmemd
+# 对每个返回的 PID，手动执行终止命令（sudo 加终止信号加具体PID）
+
+# 5. 启动 etmemd（日志级别2=debug）
+sudo nohup /usr/bin/etmemd -s etmemd_socket -l 2 > /tmp/etmemd.log 2>&1 &
+sleep 2
+ps aux | grep etmemd | grep -v grep
+
+--- 确保无同名进程干扰 ---
+
+# 6. 检查宿主机上是否有残留 memhog 进程
+pgrep -a memhog
+# 如果有不属于目标 Pod 的，手动清理（终止对应 PID）
+
+--- 部署 Operator + Agent ---
+
+# 7. Helm 安装（如果尚未安装）
+helm install etmem-operator deploy/helm -n etmem-system --create-namespace
+
+# 8. 确认组件运行
+kubectl -n etmem-system get pods
+
+--- 部署测试 Pod ---
+
+# 9. 创建 memhog 测试 Pod（256MB 内存占用，aggressive profile）
+# Pod YAML 关键字段:
+#   labels:
+#     etmem.openeuler.io/enable: "true"
+#   annotations:
+#     etmem.openeuler.io/profile: "aggressive"
+#   containers:
+#   - name: memhog
+#     image: polinux/stress
+#     command: ["stress", "--vm", "1", "--vm-bytes", "256M", "--vm-hang", "0"]
+#     resources:
+#       limits:
+#         memory: 512Mi
+
+--- 验证 ---
+
+# 10. 等 Pod Running 后确认 EtmemPolicy 自动创建
+kubectl get etmempolicy -A
+
+# 11. 获取容器 PID（通过 crictl）
+# sudo crictl ps --name memhog -q | head -1
+# sudo crictl inspect <CONTAINER_ID> | python3 解析 info.pid
+
+# 12. 检查初始 VmSwap（应为 0）
+grep -E 'VmRSS|VmSwap' /proc/<PID>/status
+
+# 13. 确认 etmemd 加载了任务
+sudo /usr/bin/etmem project show -s etmemd_socket
+# 应看到: started=true, value=memhog（非 pause）
+
+# 14. 等待 30-60 秒后检查 VmSwap
+grep -E 'VmRSS|VmSwap' /proc/<PID>/status
+# VmSwap 应 > 0（成功！）
+
+--- 本次实际结果 ---
+
+#   Before: VmRSS=270,792 kB, VmSwap=0 kB
+#   After:  VmRSS=1,540 kB,   VmSwap=272,156 kB (265MB)
+#   成功判定: VmSwap > 0 且 VmRSS 明显下降
+
+=================================================================
+ 最小必要条件（缺一不可）
+=================================================================
+
+1. etmem 内核模块: etmem_scan + etmem_swap (insmod / modprobe)
+2. etmemd 守护进程: /usr/bin/etmemd -s etmemd_socket 运行中
+3. swap 设备: swapon 已启用，有足够空闲空间
+4. swappiness: vm.swappiness >= 60
+5. sysmem_threshold > 当前 MemAvailable%
+   - 1TB 机器 82% available -> threshold 必须 > 82
+   - aggressive profile = 95 (OK)
+6. 单 [task] 配置: Agent 已过滤 pause/sandbox 容器
+7. 无同名进程干扰: 宿主机上不应有其他同名进程
+8. swap_flag=no: FusionOS 5.10 内核下 swap_flag=yes 导致 0 字节回写
+9. 配置文件权限: 600 或 400（etmemd 强制要求）

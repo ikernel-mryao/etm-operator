@@ -1,0 +1,77 @@
+--- Agent logs (last 100 lines) ---
+2026-04-15T12:21:57Z	INFO	agent	Detected systemd cgroup driver
+2026-04-15T12:21:57Z	DEBUG	agent	No existing NodeState found, starting fresh
+2026-04-15T12:21:57Z	INFO	agent	Agent starting	{"node": "cp0", "interval": "30s"}
+2026-04-15T12:22:27Z	DEBUG	agent	Reconcile cycle	{"policies": 0, "pods": 241}
+2026-04-15T12:22:57Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:22:57Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:23:27Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:23:27Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:23:57Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:23:57Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:24:27Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:24:27Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:24:57Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:24:57Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:25:28Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:25:28Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:25:57Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:25:57Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:26:27Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:26:27Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:26:57Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:26:57Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:27:27Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:27:27Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:27:57Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:27:57Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:28:27Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:28:27Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:28:57Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:28:57Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:29:27Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:29:27Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:29:57Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:29:57Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:30:27Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:30:27Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:30:57Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:30:57Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:31:27Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:31:27Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:31:57Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:31:57Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:32:27Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:32:27Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:32:57Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:32:57Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:33:27Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:33:27Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:33:57Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:33:57Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:34:27Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:34:27Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:34:57Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:34:57Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:35:27Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:35:27Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:35:57Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:35:57Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:36:27Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:36:27Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:36:57Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:36:57Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:37:27Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:37:27Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:37:57Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:37:57Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:38:27Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:38:27Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:38:57Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:38:57Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:39:27Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:39:27Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:39:57Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:39:57Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-15T12:40:27Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 242}
+2026-04-15T12:40:27Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
