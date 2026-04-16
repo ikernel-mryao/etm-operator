@@ -13,9 +13,9 @@ import (
 func TestSlideEngine_GenerateConfig_Moderate(t *testing.T) {
 	e := &SlideEngine{}
 	params, _ := GetProfile("moderate")
-	processes := []ProcessTarget{{Name: "mysqld"}}
+	process := ProcessTarget{Name: "mysqld"}
 
-	config := e.GenerateConfig("test-project", processes, params)
+	config := e.GenerateConfig("test-project", process, params)
 
 	assert.Contains(t, config, "[project]")
 	assert.Contains(t, config, "name=test-project")
@@ -31,17 +31,17 @@ func TestSlideEngine_GenerateConfig_Moderate(t *testing.T) {
 	assert.Contains(t, config, "swap_flag=no")
 }
 
-func TestSlideEngine_GenerateConfig_MultipleProcesses(t *testing.T) {
+func TestSlideEngine_GenerateConfig_SingleProcess(t *testing.T) {
 	e := &SlideEngine{}
 	params, _ := GetProfile("conservative")
-	processes := []ProcessTarget{{Name: "mysqld"}, {Name: "java"}}
+	process := ProcessTarget{Name: "java"}
 
-	config := e.GenerateConfig("multi-proj", processes, params)
+	config := e.GenerateConfig("single-proj", process, params)
 
 	taskCount := strings.Count(config, "[task]")
-	assert.Equal(t, 2, taskCount)
-	assert.Contains(t, config, "value=mysqld")
+	assert.Equal(t, 1, taskCount, "etmemd only supports one [task] per config")
 	assert.Contains(t, config, "value=java")
+	assert.Contains(t, config, "name=single-proj_task_0")
 }
 
 func TestSlideEngine_ApplyOverrides(t *testing.T) {
@@ -59,9 +59,9 @@ func TestSlideEngine_ApplyOverrides(t *testing.T) {
 func TestSlideEngine_WriteConfigFile(t *testing.T) {
 	e := &SlideEngine{}
 	params, _ := GetProfile("moderate")
-	processes := []ProcessTarget{{Name: "mysqld"}}
+	process := ProcessTarget{Name: "mysqld"}
 
-	path, err := e.WriteConfigFile(t.TempDir(), "test-proj", processes, params)
+	path, err := e.WriteConfigFile(t.TempDir(), "test-proj", process, params)
 	require.NoError(t, err)
 	assert.Contains(t, path, "test-proj")
 	assert.True(t, strings.HasSuffix(path, ".conf"))

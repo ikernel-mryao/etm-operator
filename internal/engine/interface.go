@@ -11,8 +11,8 @@ type ProcessTarget struct {
 
 // Engine defines the interface for etmem engine implementations.
 type Engine interface {
-	GenerateConfig(projectName string, processes []ProcessTarget, params SlideParams) string
-	WriteConfigFile(dir, projectName string, processes []ProcessTarget, params SlideParams) (string, error)
+	GenerateConfig(projectName string, process ProcessTarget, params SlideParams) string
+	WriteConfigFile(dir, projectName string, process ProcessTarget, params SlideParams) (string, error)
 }
 
 // ApplyOverrides merges CRD-level overrides into base profile params.

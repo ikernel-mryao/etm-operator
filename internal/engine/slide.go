@@ -2,12 +2,12 @@
 // 配置文件格式（INI 风格）：
 //   [project] 定义全局扫描参数（loop、interval、内存阈值等）
 //   [engine]  声明引擎类型为 slide
-//   [task]    每个进程对应一个 task 块，定义换出策略（T、swap_threshold 等）
+//   [task]    一个进程对应一个 task 块，定义换出策略（T、swap_threshold 等）
 // 参数映射：Kubernetes API SlideParams → etmem CLI 配置字段
 //
-// 重要限制：etmemd INI 解析器仅保留最后一个 [task] 段，
-// 因此调用方必须确保 processes 切片中只有一个元素。
-// Agent 在构建 processes 时已过滤基础设施容器并限制为单进程。
+// 重要限制：etmemd 只支持每个配置文件一个 [task] 段，且同名 project 的
+// 第二次 obj add 会返回 "project has been existed" 错误。
+// 因此每个进程必须对应一个独立的 project 和独立的配置文件。
 package engine
 
 import (
@@ -19,7 +19,7 @@ import (
 
 type SlideEngine struct{}
 
-func (e *SlideEngine) GenerateConfig(projectName string, processes []ProcessTarget, params SlideParams) string {
+func (e *SlideEngine) GenerateConfig(projectName string, process ProcessTarget, params SlideParams) string {
 	var b strings.Builder
 
 	fmt.Fprintf(&b, "[project]\n")
@@ -36,29 +36,27 @@ func (e *SlideEngine) GenerateConfig(projectName string, processes []ProcessTarg
 	fmt.Fprintf(&b, "name=slide\n")
 	fmt.Fprintf(&b, "project=%s\n", projectName)
 
-	for i, proc := range processes {
-		fmt.Fprintf(&b, "\n[task]\n")
-		fmt.Fprintf(&b, "project=%s\n", projectName)
-		fmt.Fprintf(&b, "engine=slide\n")
-		fmt.Fprintf(&b, "name=%s_task_%d\n", projectName, i)
-		fmt.Fprintf(&b, "type=name\n")
-		fmt.Fprintf(&b, "value=%s\n", proc.Name)
-		fmt.Fprintf(&b, "T=%d\n", params.T)
-		fmt.Fprintf(&b, "max_threads=%d\n", params.MaxThreads)
-		if params.SwapThreshold != "" {
-			fmt.Fprintf(&b, "swap_threshold=%s\n", params.SwapThreshold)
-		}
-		fmt.Fprintf(&b, "swap_flag=%s\n", params.SwapFlag)
+	fmt.Fprintf(&b, "\n[task]\n")
+	fmt.Fprintf(&b, "project=%s\n", projectName)
+	fmt.Fprintf(&b, "engine=slide\n")
+	fmt.Fprintf(&b, "name=%s_task_0\n", projectName)
+	fmt.Fprintf(&b, "type=name\n")
+	fmt.Fprintf(&b, "value=%s\n", process.Name)
+	fmt.Fprintf(&b, "T=%d\n", params.T)
+	fmt.Fprintf(&b, "max_threads=%d\n", params.MaxThreads)
+	if params.SwapThreshold != "" {
+		fmt.Fprintf(&b, "swap_threshold=%s\n", params.SwapThreshold)
 	}
+	fmt.Fprintf(&b, "swap_flag=%s\n", params.SwapFlag)
 
 	return b.String()
 }
 
-func (e *SlideEngine) WriteConfigFile(dir, projectName string, processes []ProcessTarget, params SlideParams) (string, error) {
+func (e *SlideEngine) WriteConfigFile(dir, projectName string, process ProcessTarget, params SlideParams) (string, error) {
 	if err := os.MkdirAll(dir, 0755); err != nil {
 		return "", fmt.Errorf("create config dir: %w", err)
 	}
-	content := e.GenerateConfig(projectName, processes, params)
+	content := e.GenerateConfig(projectName, process, params)
 	path := filepath.Join(dir, projectName+".conf")
 	// etmemd 安全要求：配置文件权限必须为 600 或 400
 	if err := os.WriteFile(path, []byte(content), 0600); err != nil {
