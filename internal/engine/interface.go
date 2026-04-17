@@ -5,8 +5,10 @@ import (
 )
 
 // ProcessTarget represents a process to be managed by etmem.
+// PID is the Linux process ID, resolved from the Pod's cgroup. Name is kept for logging and project naming.
 type ProcessTarget struct {
 	Name string
+	PID  int
 }
 
 // Engine defines the interface for etmem engine implementations.

@@ -10,10 +10,23 @@ import (
 	etmemv1 "github.com/openeuler/etmem-operator/api/v1alpha1"
 )
 
+func TestSlideEngine_GenerateConfig_UsesPID(t *testing.T) {
+	e := &SlideEngine{}
+	params, _ := GetProfile("moderate")
+	process := ProcessTarget{Name: "mysqld", PID: 12345}
+
+	config := e.GenerateConfig("test-project", process, params)
+
+	assert.Contains(t, config, "type=pid")
+	assert.Contains(t, config, "value=12345")
+	assert.NotContains(t, config, "type=name")
+	assert.NotContains(t, config, "value=mysqld")
+}
+
 func TestSlideEngine_GenerateConfig_Moderate(t *testing.T) {
 	e := &SlideEngine{}
 	params, _ := GetProfile("moderate")
-	process := ProcessTarget{Name: "mysqld"}
+	process := ProcessTarget{Name: "mysqld", PID: 1234}
 
 	config := e.GenerateConfig("test-project", process, params)
 
@@ -26,7 +39,8 @@ func TestSlideEngine_GenerateConfig_Moderate(t *testing.T) {
 	assert.Contains(t, config, "[engine]")
 	assert.Contains(t, config, "name=slide")
 	assert.Contains(t, config, "[task]")
-	assert.Contains(t, config, "value=mysqld")
+	assert.Contains(t, config, "value=1234")
+	assert.Contains(t, config, "type=pid")
 	assert.Contains(t, config, "T=1")
 	assert.Contains(t, config, "swap_flag=no")
 }
@@ -34,13 +48,14 @@ func TestSlideEngine_GenerateConfig_Moderate(t *testing.T) {
 func TestSlideEngine_GenerateConfig_SingleProcess(t *testing.T) {
 	e := &SlideEngine{}
 	params, _ := GetProfile("conservative")
-	process := ProcessTarget{Name: "java"}
+	process := ProcessTarget{Name: "java", PID: 5678}
 
 	config := e.GenerateConfig("single-proj", process, params)
 
 	taskCount := strings.Count(config, "[task]")
 	assert.Equal(t, 1, taskCount, "etmemd only supports one [task] per config")
-	assert.Contains(t, config, "value=java")
+	assert.Contains(t, config, "value=5678")
+	assert.Contains(t, config, "type=pid")
 	assert.Contains(t, config, "name=single-proj_task_0")
 }
 
@@ -59,7 +74,7 @@ func TestSlideEngine_ApplyOverrides(t *testing.T) {
 func TestSlideEngine_WriteConfigFile(t *testing.T) {
 	e := &SlideEngine{}
 	params, _ := GetProfile("moderate")
-	process := ProcessTarget{Name: "mysqld"}
+	process := ProcessTarget{Name: "mysqld", PID: 9999}
 
 	path, err := e.WriteConfigFile(t.TempDir(), "test-proj", process, params)
 	require.NoError(t, err)

@@ -40,8 +40,8 @@ func (e *SlideEngine) GenerateConfig(projectName string, process ProcessTarget, 
 	fmt.Fprintf(&b, "project=%s\n", projectName)
 	fmt.Fprintf(&b, "engine=slide\n")
 	fmt.Fprintf(&b, "name=%s_task_0\n", projectName)
-	fmt.Fprintf(&b, "type=name\n")
-	fmt.Fprintf(&b, "value=%s\n", process.Name)
+	fmt.Fprintf(&b, "type=pid\n")
+	fmt.Fprintf(&b, "value=%d\n", process.PID)
 	fmt.Fprintf(&b, "T=%d\n", params.T)
 	fmt.Fprintf(&b, "max_threads=%d\n", params.MaxThreads)
 	if params.SwapThreshold != "" {
