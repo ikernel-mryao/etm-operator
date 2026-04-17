@@ -76,6 +76,8 @@ func TestProjectNameForProcess_Truncation(t *testing.T) {
 	long := strings.Repeat("a", 60)
 	name := ProjectNameForProcess(long, "pod-name", "proc")
 	assert.LessOrEqual(t, len(name), 64)
+	// Truncated names must contain a hash suffix (last 8 hex chars after '-')
+	assert.Equal(t, 64, len(name), "truncated names should be exactly 64 chars")
 }
 
 func TestProjectNameForProcess_Stable(t *testing.T) {
@@ -83,6 +85,12 @@ func TestProjectNameForProcess_Stable(t *testing.T) {
 	a := ProjectNameForProcess("ns", "pod", "proc")
 	b := ProjectNameForProcess("ns", "pod", "proc")
 	assert.Equal(t, a, b)
+
+	// Stability must also hold for truncated names
+	long := strings.Repeat("x", 60)
+	c := ProjectNameForProcess(long, "pod", "proc")
+	d := ProjectNameForProcess(long, "pod", "proc")
+	assert.Equal(t, c, d)
 }
 
 func TestProjectNameForProcess_UniqueAcrossProcesses(t *testing.T) {
@@ -97,4 +105,36 @@ func TestProjectNameForProcess_UniqueAcrossPods(t *testing.T) {
 	a := ProjectNameForProcess("default", "mysql-0", "mysqld")
 	b := ProjectNameForProcess("default", "mysql-1", "mysqld")
 	assert.NotEqual(t, a, b)
+}
+
+func TestProjectNameForProcess_TruncationCollisionResistance(t *testing.T) {
+	// With long namespace+podName, different processes must still produce
+	// different project names after truncation. This was a bug: blind
+	// truncation at 64 chars caused proc1 and proc2 to collide.
+	longNs := strings.Repeat("a", 30)
+	longPod := strings.Repeat("b", 28)
+	// Full name = 30 + 1 + 28 + 1 + 5 = 65 chars → triggers truncation
+	a := ProjectNameForProcess(longNs, longPod, "proc1")
+	b := ProjectNameForProcess(longNs, longPod, "proc2")
+	assert.NotEqual(t, a, b, "different processes must not collide after truncation")
+	assert.LessOrEqual(t, len(a), 64)
+	assert.LessOrEqual(t, len(b), 64)
+}
+
+func TestProjectNameForProcess_ShortNameFullyReadable(t *testing.T) {
+	// Short names must be the exact concatenation with no hash suffix
+	name := ProjectNameForProcess("ns", "pod", "proc")
+	assert.Equal(t, "ns-pod-proc", name)
+}
+
+func TestProjectNameForProcess_ExactBoundary(t *testing.T) {
+	// Name that is exactly 64 chars should NOT get hashed
+	// 64 - 2 (separators) = 62 chars for parts
+	ns := strings.Repeat("n", 20)
+	pod := strings.Repeat("p", 20)
+	proc := strings.Repeat("r", 22) // 20 + 1 + 20 + 1 + 22 = 64
+	name := ProjectNameForProcess(ns, pod, proc)
+	expected := ns + "-" + pod + "-" + proc
+	assert.Equal(t, expected, name, "exactly 64 chars should use full name")
+	assert.Equal(t, 64, len(name))
 }

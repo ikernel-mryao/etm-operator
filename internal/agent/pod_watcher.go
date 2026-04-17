@@ -3,6 +3,9 @@
 package agent
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
+
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -52,15 +55,24 @@ func ProjectName(namespace, podName string) string {
 
 // ProjectNameForProcess generates the etmem project name for a specific process in a pod.
 // Each process needs its own project because etmemd rejects obj add for existing project names.
-// Format: {namespace}-{podName}-{processName}, truncated to 64 characters.
-// This name must be:
+//
+// Naming rule:
+//   - Short names (≤64 chars): "{namespace}-{podName}-{processName}" — fully human-readable
+//   - Long names (>64 chars):  "{55-char prefix}-{8-char SHA256 hex}" = 64 chars total
+//     The hash is computed from the full untruncated name, so different inputs always
+//     produce different outputs (with overwhelming probability).
+//
+// Properties:
 //   - stable across reconcile loops (deterministic from inputs)
-//   - unique per process within a pod (includes processName)
-//   - unique across pods (includes namespace + podName)
+//   - unique per process within a pod (processName in name or hash)
+//   - unique across pods (namespace + podName in name or hash)
+//   - max 64 characters guaranteed
 func ProjectNameForProcess(namespace, podName, processName string) string {
-	name := namespace + "-" + podName + "-" + processName
-	if len(name) > 64 {
-		name = name[:64]
+	full := namespace + "-" + podName + "-" + processName
+	if len(full) <= 64 {
+		return full
 	}
-	return name
+	hash := sha256.Sum256([]byte(full))
+	suffix := hex.EncodeToString(hash[:])[:8]
+	return full[:55] + "-" + suffix
 }
