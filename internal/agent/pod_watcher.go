@@ -5,6 +5,7 @@ package agent
 import (
 	"crypto/sha256"
 	"encoding/hex"
+	"fmt"
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -43,18 +44,19 @@ func MatchPodToPolicy(pod *corev1.Pod, policy *etmemv1.EtmemPolicy, nodeName str
 // Each process needs its own project because etmemd rejects obj add for existing project names.
 //
 // Naming rule:
-//   - Short names (≤64 chars): "{namespace}-{podName}-{processName}" — fully human-readable
+//   - Short names (≤64 chars): "{namespace}-{podName}-{processName}-p{pid}" — fully human-readable
 //   - Long names (>64 chars):  "{55-char prefix}-{8-char SHA256 hex}" = 64 chars total
 //     The hash is computed from the full untruncated name, so different inputs always
 //     produce different outputs (with overwhelming probability).
 //
 // Properties:
 //   - stable across reconcile loops (deterministic from inputs)
-//   - unique per process within a pod (processName in name or hash)
+//   - unique per process within a pod (processName and PID in name or hash)
 //   - unique across pods (namespace + podName in name or hash)
+//   - unique across PIDs (PID suffix prevents collision)
 //   - max 64 characters guaranteed
-func ProjectNameForProcess(namespace, podName, processName string) string {
-	full := namespace + "-" + podName + "-" + processName
+func ProjectNameForProcess(namespace, podName, processName string, pid int) string {
+	full := namespace + "-" + podName + "-" + processName + fmt.Sprintf("-p%d", pid)
 	if len(full) <= 64 {
 		return full
 	}

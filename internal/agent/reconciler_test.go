@@ -87,9 +87,9 @@ func TestTaskManager_MultiProject_StartMultiple(t *testing.T) {
 	ctx := context.Background()
 
 	projects := []string{
-		ProjectNameForProcess("default", "mysql-0", "mysqld"),
-		ProjectNameForProcess("default", "mysql-0", "exporter"),
-		ProjectNameForProcess("default", "mysql-0", "sidecar"),
+		ProjectNameForProcess("default", "mysql-0", "mysqld", 1001),
+		ProjectNameForProcess("default", "mysql-0", "exporter", 1002),
+		ProjectNameForProcess("default", "mysql-0", "sidecar", 1003),
 	}
 
 	for _, name := range projects {
@@ -117,8 +117,8 @@ func TestTaskManager_MultiProject_IdempotentReconcile(t *testing.T) {
 	ctx := context.Background()
 
 	projects := []string{
-		ProjectNameForProcess("ns", "pod-abc", "app"),
-		ProjectNameForProcess("ns", "pod-abc", "worker"),
+		ProjectNameForProcess("ns", "pod-abc", "app", 2001),
+		ProjectNameForProcess("ns", "pod-abc", "worker", 2002),
 	}
 
 	// First reconcile: start both projects.
@@ -153,9 +153,9 @@ func TestTaskManager_MultiProject_CleanupOnProcessDisappear(t *testing.T) {
 	tm := NewTaskManager(tr, t.TempDir())
 	ctx := context.Background()
 
-	proj1 := ProjectNameForProcess("default", "app-0", "main")
-	proj2 := ProjectNameForProcess("default", "app-0", "helper")
-	proj3 := ProjectNameForProcess("default", "app-0", "logger")
+	proj1 := ProjectNameForProcess("default", "app-0", "main", 3001)
+	proj2 := ProjectNameForProcess("default", "app-0", "helper", 3002)
+	proj3 := ProjectNameForProcess("default", "app-0", "logger", 3003)
 
 	// Start all 3.
 	for _, name := range []string{proj1, proj2, proj3} {
@@ -191,8 +191,8 @@ func TestTaskManager_MultiProject_BootstrapRecovery(t *testing.T) {
 	tm := NewTaskManager(tr, tmpDir)
 
 	// Derive project names the same way agentReconcile does.
-	proj1 := ProjectNameForProcess("prod", "db-7f8a", "postgres")
-	proj2 := ProjectNameForProcess("prod", "db-7f8a", "pgbouncer")
+	proj1 := ProjectNameForProcess("prod", "db-7f8a", "postgres", 4001)
+	proj2 := ProjectNameForProcess("prod", "db-7f8a", "pgbouncer", 4002)
 
 	// Simulate config files left from before restart.
 	for _, name := range []string{proj1, proj2} {
@@ -220,9 +220,9 @@ func TestTaskManager_MultiProject_StopAll(t *testing.T) {
 	ctx := context.Background()
 
 	names := []string{
-		ProjectNameForProcess("ns", "pod", "a"),
-		ProjectNameForProcess("ns", "pod", "b"),
-		ProjectNameForProcess("ns", "pod", "c"),
+		ProjectNameForProcess("ns", "pod", "a", 5001),
+		ProjectNameForProcess("ns", "pod", "b", 5002),
+		ProjectNameForProcess("ns", "pod", "c", 5003),
 	}
 	for _, name := range names {
 		require.NoError(t, tm.StartTask(ctx, TaskRequest{
@@ -246,8 +246,8 @@ func TestTaskManager_MultiProject_NameDerivedIdentity(t *testing.T) {
 
 	// Derive names exactly as agentReconcile does.
 	ns, pod := "monitoring", "prometheus-k8s-0"
-	proc1Name := ProjectNameForProcess(ns, pod, "prometheus")
-	proc2Name := ProjectNameForProcess(ns, pod, "thanos")
+	proc1Name := ProjectNameForProcess(ns, pod, "prometheus", 6001)
+	proc2Name := ProjectNameForProcess(ns, pod, "thanos", 6002)
 
 	// Names must be different.
 	assert.NotEqual(t, proc1Name, proc2Name)
@@ -261,15 +261,15 @@ func TestTaskManager_MultiProject_NameDerivedIdentity(t *testing.T) {
 	}
 
 	// Re-derive names (simulating next reconcile) — must match.
-	assert.Equal(t, proc1Name, ProjectNameForProcess(ns, pod, "prometheus"))
-	assert.Equal(t, proc2Name, ProjectNameForProcess(ns, pod, "thanos"))
+	assert.Equal(t, proc1Name, ProjectNameForProcess(ns, pod, "prometheus", 6001))
+	assert.Equal(t, proc2Name, ProjectNameForProcess(ns, pod, "thanos", 6002))
 
 	// IsRunning with re-derived names must still work.
-	assert.True(t, tm.IsRunning(ProjectNameForProcess(ns, pod, "prometheus")))
-	assert.True(t, tm.IsRunning(ProjectNameForProcess(ns, pod, "thanos")))
+	assert.True(t, tm.IsRunning(ProjectNameForProcess(ns, pod, "prometheus", 6001)))
+	assert.True(t, tm.IsRunning(ProjectNameForProcess(ns, pod, "thanos", 6002)))
 
 	// Stop one using re-derived name.
-	require.NoError(t, tm.StopTask(ctx, ProjectNameForProcess(ns, pod, "thanos")))
+	require.NoError(t, tm.StopTask(ctx, ProjectNameForProcess(ns, pod, "thanos", 6002)))
 	assert.True(t, tm.IsRunning(proc1Name))
 	assert.False(t, tm.IsRunning(proc2Name))
 }
