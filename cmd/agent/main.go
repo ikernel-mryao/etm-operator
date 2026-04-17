@@ -155,6 +155,7 @@ type desiredTaskInfo struct {
 	PodName     string
 	PodUID      string
 	ProcessName string
+	PID         int
 }
 
 // agentReconcile 执行节点级任务推导的 5 步 reconcile 流程：
@@ -265,17 +266,18 @@ func agentReconcile(
 			}
 			logger.Info("Matched pod", "pod", pod.Name, "pids", len(pids), "policy", policy.Name)
 
-			// Filter out infrastructure containers (pause/sandbox) and deduplicate.
-			seenNames := make(map[string]bool)
+			// Filter out infrastructure containers (pause/sandbox).
+			// Each PID gets its own etmemd project — no name deduplication needed
+			// since type=pid targets exactly one process.
 			var processes []engine.ProcessTarget
-			for _, pid := range pids {
-				if isInfraProcess(pid.Name) {
+			for _, resolved := range pids {
+				if isInfraProcess(resolved.Name) {
 					continue
 				}
-				if !seenNames[pid.Name] {
-					processes = append(processes, engine.ProcessTarget{Name: pid.Name})
-					seenNames[pid.Name] = true
-				}
+				processes = append(processes, engine.ProcessTarget{
+					Name: resolved.Name,
+					PID:  resolved.PID,
+				})
 			}
 			if len(processes) == 0 {
 				logger.V(1).Info("No application processes after filtering infrastructure containers", "pod", pod.Name)
@@ -285,7 +287,7 @@ func agentReconcile(
 			// One etmemd project per process: etmemd rejects obj add for existing
 			// project names and only supports one [task] per config file.
 			for _, proc := range processes {
-				projectName := agent.ProjectNameForProcess(policy.Namespace, pod.Name, proc.Name)
+				projectName := agent.ProjectNameForProcess(policy.Namespace, pod.Name, proc.Name, proc.PID)
 				configContent := slideEngine.GenerateConfig(projectName, proc, params)
 
 				desiredTasks[projectName] = desiredTaskInfo{
@@ -300,6 +302,7 @@ func agentReconcile(
 					PodName:     pod.Name,
 					PodUID:      string(pod.UID),
 					ProcessName: proc.Name,
+					PID:         proc.PID,
 				}
 			}
 		}
@@ -342,7 +345,7 @@ func agentReconcile(
 			PodName:     taskInfo.PodName,
 			PodUID:      taskInfo.PodUID,
 			Processes: []etmemv1.ManagedProcess{
-				{Name: taskInfo.ProcessName},
+				{Name: taskInfo.ProcessName, PID: taskInfo.PID},
 			},
 			State: "running",
 		})
