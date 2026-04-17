@@ -1,0 +1,24 @@
+=== Multi-process pod: multiproc-test ===
+Timestamp: Fri Apr 17 06:19:13 AM UTC 2026
+--- PID=2338929 (memeat1) ---
+VmPeak:	  154648 kB
+VmSize:	  154648 kB
+VmRSS:	    1788 kB
+VmSwap:	  152424 kB
+--- PID=2338930 (memeat2) ---
+VmPeak:	  154648 kB
+VmSize:	  154648 kB
+VmRSS:	    1784 kB
+VmSwap:	  152424 kB
+--- PID=2338866 (sh) ---
+VmPeak:	    4428 kB
+VmSize:	    4428 kB
+VmRSS:	    2192 kB
+VmSwap:	       0 kB
+
+=== Single-process baseline: memhog-test ===
+--- PID=1548266 (memhog) ---
+VmPeak:	 1568304 kB
+VmSize:	 1568304 kB
+VmRSS:	    1624 kB
+VmSwap:	  286720 kB

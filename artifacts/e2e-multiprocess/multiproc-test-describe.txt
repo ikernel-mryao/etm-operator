@@ -1,0 +1,70 @@
+Name:             multiproc-test
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             cp0/10.0.0.1
+Start Time:       Fri, 17 Apr 2026 14:07:04 +0800
+Labels:           etmem.openeuler.io/enable=true
+Annotations:      cni.projectcalico.org/containerID: 46f4acb4f789a5ba1817bf5b91d148e4bfac3c3a0038aab156723a48a7ed2bb7
+                  cni.projectcalico.org/podIP: 10.254.84.81/32
+                  cni.projectcalico.org/podIPs: 10.254.84.81/32
+                  etmem.openeuler.io/profile: aggressive
+                  k8s.v1.cni.cncf.io/network-status:
+                    [{
+                        "name": "k8s-pod-network",
+                        "ips": [
+                            "10.254.84.81"
+                        ],
+                        "default": true,
+                        "dns": {}
+                    }]
+Status:           Running
+IP:               10.254.84.81
+IPs:
+  IP:  10.254.84.81
+Containers:
+  memworkers:
+    Container ID:  containerd://93f08dce2b11761fd5ad0d4f0df6c17592c3e21640f2b2c8ed8fedf6ad7d3415
+    Image:         multiproc-memhog:v1
+    Image ID:      sha256:66a96b7ffb1195b3010031e47d2099cd092bc9e135faa8005c89107cf4822631
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      /bin/sh
+      -c
+      /memeat1 150 & /memeat2 150 & wait
+    State:          Running
+      Started:      Fri, 17 Apr 2026 14:07:05 +0800
+    Ready:          True
+    Restart Count:  0
+    Limits:
+      memory:  512Mi
+    Requests:
+      memory:     256Mi
+    Environment:  <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-sx75c (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  kube-api-access-sx75c:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 15s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 15s
+Events:
+  Type    Reason          Age   From     Message
+  ----    ------          ----  ----     -------
+  Normal  AddedInterface  12m   multus   Add eth0 [10.254.84.81/32] from k8s-pod-network
+  Normal  Pulled          12m   kubelet  Container image "multiproc-memhog:v1" already present on machine
+  Normal  Created         12m   kubelet  Created container memworkers
+  Normal  Started         12m   kubelet  Started container memworkers
