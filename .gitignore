@@ -2,3 +2,7 @@
 # Build artifacts
 /bin/
 
+
+# Built binaries
+agent
+operator

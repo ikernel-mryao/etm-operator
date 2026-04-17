@@ -39,20 +39,6 @@ func MatchPodToPolicy(pod *corev1.Pod, policy *etmemv1.EtmemPolicy, nodeName str
 	return true
 }
 
-// PodTaskKey returns a unique key for a policy+pod combination.
-func PodTaskKey(policyNamespace, policyName, podName string) string {
-	return policyNamespace + "/" + policyName + "/" + podName
-}
-
-// ProjectName generates the etmem project name from namespace and pod name.
-func ProjectName(namespace, podName string) string {
-	name := namespace + "-" + podName
-	if len(name) > 64 {
-		name = name[:64]
-	}
-	return name
-}
-
 // ProjectNameForProcess generates the etmem project name for a specific process in a pod.
 // Each process needs its own project because etmemd rejects obj add for existing project names.
 //
