@@ -1,6 +1,7 @@
 package agent
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -64,4 +65,36 @@ func TestMatchPodToPolicy_Suspended(t *testing.T) {
 		Spec: corev1.PodSpec{NodeName: "worker-01"},
 	}
 	assert.False(t, MatchPodToPolicy(pod, policy, "worker-01", nil))
+}
+
+func TestProjectNameForProcess(t *testing.T) {
+	name := ProjectNameForProcess("default", "mysql-0", "mysqld")
+	assert.Equal(t, "default-mysql-0-mysqld", name)
+}
+
+func TestProjectNameForProcess_Truncation(t *testing.T) {
+	long := strings.Repeat("a", 60)
+	name := ProjectNameForProcess(long, "pod-name", "proc")
+	assert.LessOrEqual(t, len(name), 64)
+}
+
+func TestProjectNameForProcess_Stable(t *testing.T) {
+	// Same inputs must always produce the same output (reconcile stability)
+	a := ProjectNameForProcess("ns", "pod", "proc")
+	b := ProjectNameForProcess("ns", "pod", "proc")
+	assert.Equal(t, a, b)
+}
+
+func TestProjectNameForProcess_UniqueAcrossProcesses(t *testing.T) {
+	// Different process names must produce different project names
+	a := ProjectNameForProcess("default", "mysql-0", "mysqld")
+	b := ProjectNameForProcess("default", "mysql-0", "java")
+	assert.NotEqual(t, a, b)
+}
+
+func TestProjectNameForProcess_UniqueAcrossPods(t *testing.T) {
+	// Different pods must produce different project names for same process
+	a := ProjectNameForProcess("default", "mysql-0", "mysqld")
+	b := ProjectNameForProcess("default", "mysql-1", "mysqld")
+	assert.NotEqual(t, a, b)
 }

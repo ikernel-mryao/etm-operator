@@ -49,3 +49,18 @@ func ProjectName(namespace, podName string) string {
 	}
 	return name
 }
+
+// ProjectNameForProcess generates the etmem project name for a specific process in a pod.
+// Each process needs its own project because etmemd rejects obj add for existing project names.
+// Format: {namespace}-{podName}-{processName}, truncated to 64 characters.
+// This name must be:
+//   - stable across reconcile loops (deterministic from inputs)
+//   - unique per process within a pod (includes processName)
+//   - unique across pods (includes namespace + podName)
+func ProjectNameForProcess(namespace, podName, processName string) string {
+	name := namespace + "-" + podName + "-" + processName
+	if len(name) > 64 {
+		name = name[:64]
+	}
+	return name
+}
