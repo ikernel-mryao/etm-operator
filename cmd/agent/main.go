@@ -150,18 +150,20 @@ func main() {
 }
 
 type desiredTaskInfo struct {
-	Request   agent.TaskRequest
-	PolicyRef etmemv1.PolicyReference
-	PodName   string
-	PodUID    string
+	Request     agent.TaskRequest
+	PolicyRef   etmemv1.PolicyReference
+	PodName     string
+	PodUID      string
+	ProcessName string
 }
 
 // agentReconcile 执行节点级任务推导的 5 步 reconcile 流程：
 // 1. 列出所有 EtmemPolicy
 // 2. 列出所有 Pod（客户端侧通过 MatchPodToPolicy 过滤）
-// 3. 构建期望任务集合（匹配 Pod → 解析 PID → 生成配置）
+// 3. 构建期望任务集合（匹配 Pod → 解析 PID → 每个进程生成独立 project/配置）
 // 4. Diff：停止不再需要的任务
 // 5. 启动新任务
+// 每个应用进程对应一个独立的 etmemd project（etmemd 不支持多 task 共享 project）。
 // 最后更新 EtmemNodeState 反映当前节点观测状态。
 func agentReconcile(
 	ctx context.Context,
@@ -264,8 +266,6 @@ func agentReconcile(
 			logger.Info("Matched pod", "pod", pod.Name, "pids", len(pids), "policy", policy.Name)
 
 			// Filter out infrastructure containers (pause/sandbox) and deduplicate.
-			// etmemd only supports one [task] per config file (last section wins),
-			// so we must ensure only application processes remain.
 			seenNames := make(map[string]bool)
 			var processes []engine.ProcessTarget
 			for _, pid := range pids {
@@ -281,25 +281,26 @@ func agentReconcile(
 				logger.V(1).Info("No application processes after filtering infrastructure containers", "pod", pod.Name)
 				continue
 			}
-			if len(processes) > 1 {
-				logger.Info("Multiple application processes found; etmemd only supports one task per config, using first process",
-					"pod", pod.Name, "processes", len(processes), "selected", processes[0].Name)
-				processes = processes[:1]
-			}
-			projectName := agent.ProjectName(policy.Namespace, pod.Name)
-			configContent := slideEngine.GenerateConfig(projectName, processes, params)
 
-			desiredTasks[projectName] = desiredTaskInfo{
-				Request: agent.TaskRequest{
-					ProjectName:   projectName,
-					ConfigContent: configContent,
-				},
-				PolicyRef: etmemv1.PolicyReference{
-					Name:      policy.Name,
-					Namespace: policy.Namespace,
-				},
-				PodName: pod.Name,
-				PodUID:  string(pod.UID),
+			// One etmemd project per process: etmemd rejects obj add for existing
+			// project names and only supports one [task] per config file.
+			for _, proc := range processes {
+				projectName := agent.ProjectNameForProcess(policy.Namespace, pod.Name, proc.Name)
+				configContent := slideEngine.GenerateConfig(projectName, proc, params)
+
+				desiredTasks[projectName] = desiredTaskInfo{
+					Request: agent.TaskRequest{
+						ProjectName:   projectName,
+						ConfigContent: configContent,
+					},
+					PolicyRef: etmemv1.PolicyReference{
+						Name:      policy.Name,
+						Namespace: policy.Namespace,
+					},
+					PodName:     pod.Name,
+					PodUID:      string(pod.UID),
+					ProcessName: proc.Name,
+				}
 			}
 		}
 	}
@@ -325,7 +326,12 @@ func agentReconcile(
 	}
 
 	// C3: Update metrics
-	agent.ManagedPodsTotal.Set(float64(len(desiredTasks)))
+	// Count unique Pods (not projects) for the metric
+	uniquePods := make(map[string]bool)
+	for _, taskInfo := range desiredTasks {
+		uniquePods[taskInfo.PodName] = true
+	}
+	agent.ManagedPodsTotal.Set(float64(len(uniquePods)))
 
 	// C3: Write EtmemNodeState
 	nodeTasks := make([]etmemv1.NodeTask, 0, len(desiredTasks))
@@ -335,13 +341,16 @@ func agentReconcile(
 			PolicyRef:   taskInfo.PolicyRef,
 			PodName:     taskInfo.PodName,
 			PodUID:      taskInfo.PodUID,
-			State:       "running",
+			Processes: []etmemv1.ManagedProcess{
+				{Name: taskInfo.ProcessName},
+			},
+			State: "running",
 		})
 	}
 	nodeStatus := &etmemv1.EtmemNodeStateStatus{
 		NodeName: nodeName,
 		Tasks:    nodeTasks,
-		Metrics:  &etmemv1.NodeMetrics{TotalManagedPods: len(desiredTasks)},
+		Metrics:  &etmemv1.NodeMetrics{TotalManagedPods: len(uniquePods)},
 	}
 	if err := nsWriter.WriteStatus(ctx, nodeStatus); err != nil {
 		logger.Error(err, "failed to write NodeState")
