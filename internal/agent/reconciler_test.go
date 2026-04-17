@@ -273,3 +273,101 @@ func TestTaskManager_MultiProject_NameDerivedIdentity(t *testing.T) {
 	assert.True(t, tm.IsRunning(proc1Name))
 	assert.False(t, tm.IsRunning(proc2Name))
 }
+
+func TestTaskManager_PIDChange_ProjectReplacement(t *testing.T) {
+	// When a process restarts, its PID changes.
+	// Old project (old PID) should be stopped, new project (new PID) started.
+	// This simulates the reconcile diff behavior.
+	tr := &mockTransport{}
+	tm := NewTaskManager(tr, t.TempDir())
+	ctx := context.Background()
+
+	// First reconcile: process "mysqld" has PID 1000
+	oldProj := ProjectNameForProcess("default", "mysql-0", "mysqld", 1000)
+	require.NoError(t, tm.StartTask(ctx, TaskRequest{
+		ProjectName:   oldProj,
+		ConfigContent: "[project]\nname=" + oldProj + "\n",
+	}))
+	assert.True(t, tm.IsRunning(oldProj))
+
+	// Process restarts → new PID 2000
+	newProj := ProjectNameForProcess("default", "mysql-0", "mysqld", 2000)
+	assert.NotEqual(t, oldProj, newProj, "different PIDs must produce different project names")
+
+	// Reconcile diff: old project not in desired set → stop it
+	desired := map[string]bool{newProj: true}
+	for _, name := range tm.RunningTasks() {
+		if !desired[name] {
+			require.NoError(t, tm.StopTask(ctx, name))
+		}
+	}
+	// Start new project
+	require.NoError(t, tm.StartTask(ctx, TaskRequest{
+		ProjectName:   newProj,
+		ConfigContent: "[project]\nname=" + newProj + "\n",
+	}))
+
+	assert.False(t, tm.IsRunning(oldProj), "old PID project should be stopped")
+	assert.True(t, tm.IsRunning(newProj), "new PID project should be running")
+	assert.Contains(t, tr.projStops, oldProj)
+	assert.Contains(t, tr.projStarts, newProj)
+}
+
+func TestTaskManager_CrossPodIsolation(t *testing.T) {
+	// Two pods on the same node, both running a process named "worker".
+	// Each pod's process has a different PID → different project names → no collision.
+	tr := &mockTransport{}
+	tm := NewTaskManager(tr, t.TempDir())
+	ctx := context.Background()
+
+	podA_proj := ProjectNameForProcess("default", "app-pod-a", "worker", 100)
+	podB_proj := ProjectNameForProcess("default", "app-pod-b", "worker", 200)
+
+	assert.NotEqual(t, podA_proj, podB_proj, "same process name in different pods must have different project names")
+
+	// Start both
+	require.NoError(t, tm.StartTask(ctx, TaskRequest{
+		ProjectName:   podA_proj,
+		ConfigContent: "[project]\nname=" + podA_proj + "\n",
+	}))
+	require.NoError(t, tm.StartTask(ctx, TaskRequest{
+		ProjectName:   podB_proj,
+		ConfigContent: "[project]\nname=" + podB_proj + "\n",
+	}))
+
+	assert.True(t, tm.IsRunning(podA_proj))
+	assert.True(t, tm.IsRunning(podB_proj))
+	assert.Len(t, tm.RunningTasks(), 2)
+
+	// Stop Pod A's project without affecting Pod B
+	require.NoError(t, tm.StopTask(ctx, podA_proj))
+	assert.False(t, tm.IsRunning(podA_proj))
+	assert.True(t, tm.IsRunning(podB_proj), "Pod B's project must not be affected")
+}
+
+func TestTaskManager_SamePodSameNameDifferentPIDs(t *testing.T) {
+	// A pod may have multiple instances of same-name process (e.g., worker pool).
+	// With type=pid, each instance gets its own project.
+	tr := &mockTransport{}
+	tm := NewTaskManager(tr, t.TempDir())
+	ctx := context.Background()
+
+	proj1 := ProjectNameForProcess("default", "pool-pod", "worker", 3001)
+	proj2 := ProjectNameForProcess("default", "pool-pod", "worker", 3002)
+	proj3 := ProjectNameForProcess("default", "pool-pod", "worker", 3003)
+
+	assert.NotEqual(t, proj1, proj2)
+	assert.NotEqual(t, proj2, proj3)
+	assert.NotEqual(t, proj1, proj3)
+
+	for _, name := range []string{proj1, proj2, proj3} {
+		require.NoError(t, tm.StartTask(ctx, TaskRequest{
+			ProjectName:   name,
+			ConfigContent: "[project]\nname=" + name + "\n",
+		}))
+	}
+
+	assert.Len(t, tm.RunningTasks(), 3)
+	assert.Len(t, tr.objAdds, 3)
+	assert.Len(t, tr.projStarts, 3)
+}

@@ -81,3 +81,34 @@ func TestSlideEngine_WriteConfigFile(t *testing.T) {
 	assert.Contains(t, path, "test-proj")
 	assert.True(t, strings.HasSuffix(path, ".conf"))
 }
+
+func TestSlideEngine_GenerateConfig_PIDInConfigContent(t *testing.T) {
+	// Verify that the generated config uses type=pid and the exact PID value,
+	// not the process name. This is the core anti-regression test for the
+	// type=name → type=pid migration.
+	e := &SlideEngine{}
+	params, _ := GetProfile("aggressive")
+	
+	// Two processes with same name but different PIDs
+	proc1 := ProcessTarget{Name: "worker", PID: 5001}
+	proc2 := ProcessTarget{Name: "worker", PID: 5002}
+	
+	config1 := e.GenerateConfig("proj1", proc1, params)
+	config2 := e.GenerateConfig("proj2", proc2, params)
+	
+	// Both must use type=pid
+	assert.Contains(t, config1, "type=pid")
+	assert.Contains(t, config2, "type=pid")
+	
+	// Each must contain its own PID, not the other's
+	assert.Contains(t, config1, "value=5001")
+	assert.NotContains(t, config1, "value=5002")
+	assert.Contains(t, config2, "value=5002")
+	assert.NotContains(t, config2, "value=5001")
+	
+	// Neither should contain type=name or the process name as a value
+	assert.NotContains(t, config1, "type=name")
+	assert.NotContains(t, config1, "value=worker")
+	assert.NotContains(t, config2, "type=name")
+	assert.NotContains(t, config2, "value=worker")
+}
