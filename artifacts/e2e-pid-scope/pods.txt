@@ -1,0 +1,246 @@
+NAMESPACE            NAME                                                              READY   STATUS                   RESTARTS         AGE     IP              NODE   NOMINATED NODE   READINESS GATES
+ai-system            airegistry-b7tvg                                                  1/1     Running                  0                4d1h    10.254.84.41    cp0    <none>           <none>
+ai-system            airegistry-g8mfx                                                  0/1     Error                    1 (16d ago)      17d     10.254.83.252   cp0    <none>           <none>
+ai-system            algorithm-imgprocess-d9cfbc485-26xxg                              1/1     Running                  0                4d1h    10.254.83.210   cp0    <none>           <none>
+ai-system            algorithm-imgprocess-d9cfbc485-q9bxg                              0/1     Error                    1                17d     10.254.83.228   cp0    <none>           <none>
+ai-system            algorithm-textprocess-68dc5945b-b6dx4                             1/1     Running                  0                4d      10.254.83.227   cp0    <none>           <none>
+ai-system            algorithm-textprocess-68dc5945b-c8s9c                             0/1     Error                    1                17d     10.254.84.6     cp0    <none>           <none>
+ai-system            app-7b87c844bd-dr55s                                              1/1     Running                  0                4d1h    10.254.83.249   cp0    <none>           <none>
+ai-system            app-7b87c844bd-htp77                                              0/1     Error                    1 (16d ago)      17d     10.254.84.77    cp0    <none>           <none>
+ai-system            app-es-7db6bbb8ff-t6nk6                                           0/1     Error                    1                17d     10.254.84.46    cp0    <none>           <none>
+ai-system            app-es-7db6bbb8ff-wdzls                                           1/1     Running                  0                4d      10.254.83.242   cp0    <none>           <none>
+ai-system            app-minio-deployment-86c87b95c-4vl6p                              0/1     ContainerStatusUnknown   1 (16d ago)      17d     10.254.84.36    cp0    <none>           <none>
+ai-system            app-minio-deployment-86c87b95c-jxglx                              1/1     Running                  0                4d      10.254.83.203   cp0    <none>           <none>
+ai-system            backend-admin-76448c449f-29wv5                                    0/1     Error                    1 (16d ago)      17d     10.254.84.76    cp0    <none>           <none>
+ai-system            backend-admin-76448c449f-t2d9m                                    1/1     Running                  1 (3d9h ago)     4d      10.254.84.3     cp0    <none>           <none>
+ai-system            backend-algorithm-788687ddb6-psq56                                1/1     Running                  186 (2d ago)     4d      10.254.84.47    cp0    <none>           <none>
+ai-system            backend-algorithm-788687ddb6-wcdd8                                0/1     Error                    2 (16d ago)      17d     10.254.84.60    cp0    <none>           <none>
+ai-system            backend-data-59bc887958-b2t8c                                     1/1     Running                  1 (3d9h ago)     4d      10.254.84.13    cp0    <none>           <none>
+ai-system            backend-data-59bc887958-t7262                                     0/1     ContainerStatusUnknown   1 (16d ago)      17d     10.254.83.207   cp0    <none>           <none>
+ai-system            backend-data-task-68fd69bb58-hxghd                                0/1     Error                    1 (16d ago)      17d     10.254.84.63    cp0    <none>           <none>
+ai-system            backend-data-task-68fd69bb58-l6zjf                                1/1     Running                  0                4d1h    10.254.83.248   cp0    <none>           <none>
+ai-system            backend-evaluation-587f79bfc-n9bdp                                1/1     Running                  0                4d      10.254.84.56    cp0    <none>           <none>
+ai-system            backend-evaluation-587f79bfc-ztwvh                                0/1     Error                    1 (16d ago)      17d     10.254.84.40    cp0    <none>           <none>
+ai-system            backend-fd5779fff-cftmm                                           0/1     Completed                1 (16d ago)      17d     10.254.84.75    cp0    <none>           <none>
+ai-system            backend-fd5779fff-pjxzb                                           1/1     Running                  0                4d      10.254.84.16    cp0    <none>           <none>
+ai-system            backend-gateway-64b5fdc44c-8js2p                                  1/1     Running                  0                4d1h    10.254.84.15    cp0    <none>           <none>
+ai-system            backend-gateway-64b5fdc44c-ms9nq                                  0/1     Error                    1 (16d ago)      17d     10.254.84.33    cp0    <none>           <none>
+ai-system            backend-image-b5598b57b-llxqw                                     1/1     Running                  0                4d      10.254.83.237   cp0    <none>           <none>
+ai-system            backend-image-b5598b57b-t9rhz                                     0/1     ContainerStatusUnknown   1 (16d ago)      17d     10.254.83.204   cp0    <none>           <none>
+ai-system            backend-k8s-c9b85c74f-hshj8                                       0/1     ContainerStatusUnknown   1 (16d ago)      17d     10.254.84.47    cp0    <none>           <none>
+ai-system            backend-k8s-c9b85c74f-rcnrj                                       1/1     Running                  314 (2d ago)     4d1h    10.254.84.14    cp0    <none>           <none>
+ai-system            backend-model-b46d6dd59-4rv22                                     0/1     ContainerStatusUnknown   1 (16d ago)      17d     10.254.83.231   cp0    <none>           <none>
+ai-system            backend-model-b46d6dd59-gfwhd                                     1/1     Running                  0                4d      10.254.83.221   cp0    <none>           <none>
+ai-system            backend-notebook-786db5dfc7-d2j8d                                 1/1     Running                  0                4d1h    10.254.83.205   cp0    <none>           <none>
+ai-system            backend-notebook-786db5dfc7-dk9np                                 0/1     Error                    1 (16d ago)      17d     10.254.84.8     cp0    <none>           <none>
+ai-system            backend-quant-579d8b69d5-5mr8f                                    0/1     Error                    1 (16d ago)      17d     10.254.84.7     cp0    <none>           <none>
+ai-system            backend-quant-579d8b69d5-6t6j9                                    1/1     Running                  0                4d1h    10.254.84.7     cp0    <none>           <none>
+ai-system            backend-serving-fb9d64695-wpbrs                                   1/1     Running                  1 (3d9h ago)     4d      10.254.84.40    cp0    <none>           <none>
+ai-system            backend-serving-fb9d64695-x6gpb                                   0/1     Error                    1 (16d ago)      17d     10.254.84.16    cp0    <none>           <none>
+ai-system            backend-serving-gateway-69964fdd79-cxphm                          1/1     Running                  363 (2d ago)     4d1h    10.254.83.198   cp0    <none>           <none>
+ai-system            backend-serving-gateway-69964fdd79-kct6f                          0/1     Error                    1 (16d ago)      17d     10.254.84.1     cp0    <none>           <none>
+ai-system            backend-train-5c78dc5887-5ztgp                                    1/1     Running                  1 (3d9h ago)     4d      10.254.83.204   cp0    <none>           <none>
+ai-system            backend-train-5c78dc5887-r549s                                    0/1     ContainerStatusUnknown   1 (16d ago)      17d     10.254.83.227   cp0    <none>           <none>
+ai-system            distribute-train-operator-6cc6fc7d7-phkg2                         0/1     Error                    1 (16d ago)      17d     10.254.84.30    cp0    <none>           <none>
+ai-system            distribute-train-operator-6cc6fc7d7-s684r                         1/1     Running                  0                4d      10.254.83.230   cp0    <none>           <none>
+ai-system            etcd-tmatrix-runtime-0                                            1/1     Running                  0                4d      10.254.83.223   cp0    <none>           <none>
+ai-system            fluent-bit-6kcxb                                                  1/1     Running                  0                3d9h    10.254.83.217   cp0    <none>           <none>
+ai-system            fluent-bit-vzkb2                                                  1/1     Running                  0                17d     10.254.175.13   wk1    <none>           <none>
+ai-system            loki-stack-f66c995-pwnsk                                          0/1     ContainerStatusUnknown   1 (16d ago)      17d     10.254.84.54    cp0    <none>           <none>
+ai-system            loki-stack-f66c995-wqpwk                                          1/1     Running                  0                4d1h    10.254.83.220   cp0    <none>           <none>
+ai-system            minio-577f8bf9bb-c4dhr                                            0/1     Completed                1 (16d ago)      17d     10.254.84.58    cp0    <none>           <none>
+ai-system            minio-577f8bf9bb-fdxnw                                            1/1     Running                  0                4d      10.254.83.246   cp0    <none>           <none>
+ai-system            mysql-cb476bcf9-ts9pb                                             1/1     Running                  0                4d      10.254.83.247   cp0    <none>           <none>
+ai-system            mysql-cb476bcf9-wk7lc                                             0/1     ContainerStatusUnknown   1 (16d ago)      17d     10.254.84.25    cp0    <none>           <none>
+ai-system            nacos-599bc656f-h6xbw                                             0/1     ContainerStatusUnknown   1 (16d ago)      17d     10.254.83.238   cp0    <none>           <none>
+ai-system            nacos-599bc656f-lwxt8                                             1/1     Running                  0                4d      10.254.83.250   cp0    <none>           <none>
+ai-system            nginx-manager-n4bpd                                               1/1     Running                  0                3d9h    10.254.83.241   cp0    <none>           <none>
+ai-system            node-init-agent-jp4j9                                             1/1     Running                  0                17d     10.254.175.14   wk1    <none>           <none>
+ai-system            redis-66c5856d9f-8p58p                                            1/1     Running                  0                4d      10.254.83.212   cp0    <none>           <none>
+ai-system            redis-66c5856d9f-c8gqs                                            0/1     Completed                1 (16d ago)      17d     10.254.83.241   cp0    <none>           <none>
+ai-system            tmatrix-runtime-87f6c988c-nvwcx                                   1/1     Running                  0                4d1h    10.254.83.228   cp0    <none>           <none>
+ai-system            tmatrix-runtime-87f6c988c-z6fbp                                   0/1     Completed                1 (16d ago)      17d     10.254.84.71    cp0    <none>           <none>
+ai-system            web-78d794b6f8-7w5t5                                              1/1     Running                  0                4d      10.254.84.4     cp0    <none>           <none>
+ai-system            web-78d794b6f8-tk58f                                              0/1     Completed                1 (16d ago)      17d     10.254.83.217   cp0    <none>           <none>
+capx-system          autofailerfixer-2g67h                                             1/1     Running                  0                3d9h    10.254.83.231   cp0    <none>           <none>
+capx-system          capi-controller-manager-c8847f55c-8gvbc                           0/1     Completed                3 (16d ago)      17d     10.254.84.74    cp0    <none>           <none>
+capx-system          capi-controller-manager-c8847f55c-qhwlq                           1/1     Running                  0                4d      10.254.84.35    cp0    <none>           <none>
+capx-system          capi-kubeadm-bootstrap-controller-manager-5cb49c7f77-28bph        1/1     Running                  0                4d      10.254.83.196   cp0    <none>           <none>
+capx-system          capi-kubeadm-bootstrap-controller-manager-5cb49c7f77-2qqwp        0/1     Completed                1 (16d ago)      17d     10.254.84.38    cp0    <none>           <none>
+capx-system          capi-kubeadm-control-plane-controller-manager-6ffb86b96f-4cfph    0/1     Completed                4 (16d ago)      17d     10.254.83.225   cp0    <none>           <none>
+capx-system          capi-kubeadm-control-plane-controller-manager-6ffb86b96f-zd24s    1/1     Running                  0                4d      10.254.83.216   cp0    <none>           <none>
+capx-system          capx-controller-manager-5bb965c9b6-9vz8n                          1/1     Running                  0                4d      10.254.83.197   cp0    <none>           <none>
+capx-system          capx-controller-manager-5bb965c9b6-gm6bm                          0/1     Completed                2 (16d ago)      17d     10.254.84.45    cp0    <none>           <none>
+capx-system          cert-manager-5fbf5b74b4-2q4mp                                     1/1     Running                  0                4d      10.254.83.222   cp0    <none>           <none>
+capx-system          cert-manager-5fbf5b74b4-6rg9p                                     0/1     Completed                1 (16d ago)      17d     10.254.83.200   cp0    <none>           <none>
+capx-system          cert-manager-5fbf5b74b4-l67sz                                     1/1     Running                  0                4d      10.254.83.214   cp0    <none>           <none>
+capx-system          cert-manager-5fbf5b74b4-m5nbw                                     0/1     Completed                1 (16d ago)      17d     10.254.83.199   cp0    <none>           <none>
+capx-system          cert-manager-5fbf5b74b4-rjjkj                                     0/1     Completed                1 (16d ago)      17d     10.254.83.208   cp0    <none>           <none>
+capx-system          cert-manager-5fbf5b74b4-rx4qs                                     1/1     Running                  0                4d      10.254.83.208   cp0    <none>           <none>
+capx-system          cert-manager-cainjector-5756d7fd8-gwlcc                           1/1     Running                  0                4d      10.254.84.12    cp0    <none>           <none>
+capx-system          cert-manager-cainjector-5756d7fd8-zvrd6                           0/1     Completed                1 (16d ago)      17d     10.254.83.249   cp0    <none>           <none>
+capx-system          cert-manager-webhook-5946776454-hkcmj                             0/1     Completed                1 (16d ago)      17d     10.254.83.209   cp0    <none>           <none>
+capx-system          cert-manager-webhook-5946776454-lwb4c                             1/1     Running                  0                4d      10.254.84.5     cp0    <none>           <none>
+capx-system          clusterbackup-controller-784bc596d7-g84fw                         1/1     Running                  0                4d      10.254.83.254   cp0    <none>           <none>
+capx-system          clusterbackup-controller-784bc596d7-sgss2                         0/1     Completed                1 (16d ago)      17d     10.254.84.26    cp0    <none>           <none>
+capx-system          customdns-controller-manager-84d76c6898-p8zhl                     1/1     Running                  0                4d      10.254.84.46    cp0    <none>           <none>
+capx-system          customdns-controller-manager-84d76c6898-zdkjz                     0/1     ContainerStatusUnknown   2 (16d ago)      17d     10.254.84.29    cp0    <none>           <none>
+capx-system          fke-5gbbl                                                         1/1     Running                  0                3d9h    10.254.84.59    cp0    <none>           <none>
+capx-system          fke-logging-service-599fdd9fc8-hhcvq                              1/1     Running                  0                4d      10.254.83.219   cp0    <none>           <none>
+capx-system          fke-logging-service-599fdd9fc8-pv7d9                              0/1     Error                    1 (16d ago)      17d     10.254.83.235   cp0    <none>           <none>
+capx-system          fke-network-operator-controller-manager-558587f7d-2fsxh           0/1     ContainerStatusUnknown   1 (16d ago)      17d     10.254.84.43    cp0    <none>           <none>
+capx-system          fke-network-operator-controller-manager-558587f7d-lcdhd           1/1     Running                  0                4d      10.254.84.51    cp0    <none>           <none>
+capx-system          fke-ops-service-55b4d9459d-tzqxf                                  0/1     Error                    1 (16d ago)      17d     10.254.84.9     cp0    <none>           <none>
+capx-system          fke-ops-service-55b4d9459d-zrv8v                                  1/1     Running                  0                4d      10.254.83.238   cp0    <none>           <none>
+capx-system          fleet-agent-c45b784f6-r98f6                                       1/1     Running                  0                2d      10.254.83.201   cp0    <none>           <none>
+capx-system          fleet-controller-5b5c65cd9c-9dplf                                 0/1     Completed                3 (16d ago)      17d     10.254.83.251   cp0    <none>           <none>
+capx-system          fleet-controller-5b5c65cd9c-c6dhq                                 1/1     Running                  0                4d      10.254.83.209   cp0    <none>           <none>
+capx-system          gitjob-c69bc778-92n7t                                             1/1     Running                  0                4d      10.254.83.226   cp0    <none>           <none>
+capx-system          gitjob-c69bc778-ztkg5                                             0/1     ContainerStatusUnknown   1 (16d ago)      17d     10.254.84.20    cp0    <none>           <none>
+capx-system          hci-accessor-75dd4c6954-tlz8v                                     1/1     Running                  0                4d1h    10.254.83.206   cp0    <none>           <none>
+capx-system          hci-accessor-75dd4c6954-tmpds                                     0/1     ContainerStatusUnknown   1 (16d ago)      17d     10.254.84.61    cp0    <none>           <none>
+capx-system          ingress-nginx-controller-controller-lqm5h                         1/1     Running                  0                3d9h    10.254.84.26    cp0    <none>           <none>
+capx-system          ipam-controller-manager-6fc6c5c7dc-b6qhb                          1/1     Running                  0                4d      10.254.83.235   cp0    <none>           <none>
+capx-system          ipam-controller-manager-6fc6c5c7dc-wwlj5                          0/1     Completed                1 (16d ago)      17d     10.254.84.37    cp0    <none>           <none>
+capx-system          metrics-server-7c74b8b9b-7zxfn                                    1/1     Running                  2 (16d ago)      17d     10.254.84.55    cp0    <none>           <none>
+capx-system          node-problem-detector-9bf4d                                       1/1     Running                  0                17d     10.254.175.1    wk1    <none>           <none>
+capx-system          node-problem-detector-zhtj8                                       1/1     Running                  1 (16d ago)      17d     10.254.83.239   cp0    <none>           <none>
+capx-system          rancher-turtles-controller-manager-94656f597-8bcmm                0/1     Completed                1 (16d ago)      17d     10.254.84.41    cp0    <none>           <none>
+capx-system          rancher-turtles-controller-manager-94656f597-f2kv5                1/1     Running                  0                4d      10.254.83.240   cp0    <none>           <none>
+capx-system          rancher-webhook-5bdd6dbdc-6brcd                                   1/1     Running                  0                4d      10.254.84.18    cp0    <none>           <none>
+capx-system          rancher-webhook-5bdd6dbdc-s6vjx                                   0/1     Completed                1 (16d ago)      17d     10.254.84.57    cp0    <none>           <none>
+capx-system          secguard-67c946896b-4tb5k                                         0/1     Error                    1 (16d ago)      17d     10.254.83.202   cp0    <none>           <none>
+capx-system          secguard-67c946896b-nk2vt                                         1/1     Running                  0                4d      10.254.83.253   cp0    <none>           <none>
+default              aimgmt-rmhpp                                                      1/1     Running                  126 (2d1h ago)   3d9h    10.254.84.44    cp0    <none>           <none>
+default              alertmanager-metric-manager-alertmanager-0                        2/2     Running                  0                4d      10.254.84.24    cp0    <none>           <none>
+default              appconfig-rttwv                                                   1/1     Running                  126 (2d1h ago)   3d9h    10.254.84.67    cp0    <none>           <none>
+default              artifactregistry-f7d85d776-94wz5                                  1/1     Running                  0                4d      10.254.83.207   cp0    <none>           <none>
+default              artifactregistry-f7d85d776-t96lz                                  0/1     Error                    1 (16d ago)      17d     10.254.84.17    cp0    <none>           <none>
+default              certmgmt-sv45z                                                    1/1     Running                  124 (2d1h ago)   3d9h    10.254.84.9     cp0    <none>           <none>
+default              clustermgmt-c7464d75f-67psj                                       1/1     Running                  122 (2d1h ago)   4d1h    10.254.84.39    cp0    <none>           <none>
+default              clustermgmt-c7464d75f-cfxpd                                       0/1     Error                    1 (16d ago)      17d     10.254.83.211   cp0    <none>           <none>
+default              db-operator-controller-manager-6b79cfb56c-84wnp                   1/1     Running                  0                4d1h    10.254.84.1     cp0    <none>           <none>
+default              db-operator-controller-manager-6b79cfb56c-qnbph                   0/1     Error                    1 (16d ago)      17d     10.254.83.219   cp0    <none>           <none>
+default              dbservice-65lhg                                                   1/1     Running                  0                2d      10.254.84.79    cp0    <none>           <none>
+default              dbservice-d69d4969c-4k57z                                         1/1     Running                  0                2d      10.0.0.1        cp0    <none>           <none>
+default              deploy-pt6gm                                                      1/1     Running                  126 (2d1h ago)   3d9h    10.254.84.49    cp0    <none>           <none>
+default              devicediscovery-tk6jx                                             1/1     Running                  126 (2d1h ago)   3d9h    10.254.84.64    cp0    <none>           <none>
+default              devmgmt-8jp7p                                                     1/1     Running                  127 (2d1h ago)   3d9h    10.254.84.54    cp0    <none>           <none>
+default              event-9zj4g                                                       1/1     Running                  122 (2d1h ago)   3d9h    10.254.84.48    cp0    <none>           <none>
+default              faultprediction-zqnh2                                             1/1     Running                  377 (2d ago)     3d9h    10.254.84.38    cp0    <none>           <none>
+default              fskmcservice-v2sjz                                                1/1     Running                  0                3d9h    10.254.84.37    cp0    <none>           <none>
+default              grafana-966cd96df-g6txn                                           0/1     Error                    1                17d     10.254.84.72    cp0    <none>           <none>
+default              grafana-966cd96df-kp98g                                           1/1     Running                  285 (2d1h ago)   4d1h    10.254.83.236   cp0    <none>           <none>
+default              iam-lxzk8                                                         1/1     Running                  126 (2d1h ago)   3d9h    10.254.84.33    cp0    <none>           <none>
+default              influxproxy-7csws                                                 1/1     Running                  0                3d9h    10.254.84.25    cp0    <none>           <none>
+default              initializationservice-6985f7799-6ksds                             2/2     Running                  302 (2d ago)     4d      10.254.83.229   cp0    <none>           <none>
+default              initializationservice-6985f7799-bs6lq                             0/2     ContainerStatusUnknown   2 (16d ago)      17d     10.254.84.0     cp0    <none>           <none>
+default              inventory-d2vcb                                                   1/1     Running                  126 (2d1h ago)   3d9h    10.254.84.28    cp0    <none>           <none>
+default              ipconfig-pxb8h                                                    1/1     Running                  126 (2d1h ago)   3d9h    10.254.84.66    cp0    <none>           <none>
+default              keymgmt-tkxwr                                                     1/1     Running                  0                3d9h    10.254.84.29    cp0    <none>           <none>
+default              kube-state-metrics-f47946ddd-f8lz2                                1/1     Running                  0                4d      10.254.84.60    cp0    <none>           <none>
+default              kube-state-metrics-f47946ddd-fsn8g                                0/1     Error                    1 (16d ago)      17d     10.254.83.246   cp0    <none>           <none>
+default              license-558648f575-q5gmn                                          0/1     Error                    1                17d     10.254.84.3     cp0    <none>           <none>
+default              license-558648f575-t455t                                          1/1     Running                  122 (2d1h ago)   4d      10.254.84.27    cp0    <none>           <none>
+default              logmgmt-65vfx                                                     1/1     Running                  118 (2d1h ago)   3d9h    10.254.84.69    cp0    <none>           <none>
+default              memhog-noenable                                                   1/1     Running                  0                4m29s   10.254.84.82    cp0    <none>           <none>
+default              memhog-test                                                       1/1     Running                  0                2d      10.254.83.232   cp0    <none>           <none>
+default              metric-manager-grafana-7d5b4b8544-r8rn6                           0/2     ContainerStatusUnknown   5 (16d ago)      17d     10.254.83.250   cp0    <none>           <none>
+default              metric-manager-grafana-7d5b4b8544-swkt7                           2/2     Running                  377 (2d ago)     4d      10.254.83.215   cp0    <none>           <none>
+default              metric-manager-operator-64fbff55d-26l69                           1/1     Running                  0                4d      10.254.84.17    cp0    <none>           <none>
+default              metric-manager-operator-64fbff55d-qdt9j                           0/1     ContainerStatusUnknown   2 (16d ago)      17d     10.254.83.240   cp0    <none>           <none>
+default              monitormgmtservice-747c647d48-gms2g                               0/1     Error                    1 (16d ago)      17d     10.254.84.24    cp0    <none>           <none>
+default              monitormgmtservice-747c647d48-q2m86                               1/1     Running                  187 (2d ago)     4d      10.254.84.10    cp0    <none>           <none>
+default              mqservice-server-0                                                1/1     Running                  0                4d1h    10.254.84.19    cp0    <none>           <none>
+default              multiproc-test                                                    1/1     Running                  0                7h2m    10.254.84.81    cp0    <none>           <none>
+default              netdevadapter-w486w                                               1/1     Running                  122 (2d1h ago)   3d9h    10.254.84.20    cp0    <none>           <none>
+default              netdevmonitor-cz56w                                               1/1     Running                  126 (2d1h ago)   3d9h    10.254.84.36    cp0    <none>           <none>
+default              node-daemon-gkcxz                                                 1/1     Running                  0                17d     10.254.175.12   wk1    <none>           <none>
+default              node-daemon-wskkq                                                 1/1     Running                  127 (2d1h ago)   3d9h    10.254.84.11    cp0    <none>           <none>
+default              node-exporter-dqjv8                                               1/1     Running                  0                30h     10.0.0.2        wk1    <none>           <none>
+default              node-exporter-t9c7n                                               1/1     Running                  0                3d9h    10.0.0.1        cp0    <none>           <none>
+default              nodeproxy-85r2t                                                   1/1     Running                  0                3d9h    10.254.83.255   cp0    <none>           <none>
+default              opsmgmtservice-56b498fd67-mknmk                                   0/1     Error                    1 (16d ago)      17d     10.254.83.237   cp0    <none>           <none>
+default              opsmgmtservice-56b498fd67-n8rl5                                   1/1     Running                  231 (2d ago)     4d      10.254.84.8     cp0    <none>           <none>
+default              osmgmt-6tbn5                                                      1/1     Running                  122 (2d1h ago)   3d9h    10.254.84.68    cp0    <none>           <none>
+default              portal-r8jwt                                                      1/1     Running                  122 (2d1h ago)   3d9h    10.254.84.6     cp0    <none>           <none>
+default              prometheus-685b674c7b-bfpj8                                       0/1     Error                    1                17d     10.254.84.56    cp0    <none>           <none>
+default              prometheus-685b674c7b-jhtj5                                       1/1     Running                  126 (2d1h ago)   4d      10.254.83.243   cp0    <none>           <none>
+default              prometheus-metric-manager-prometheus-0                            2/2     Running                  0                4d1h    10.254.84.21    cp0    <none>           <none>
+default              redis-cluster-redis-cluster-0                                     1/1     Running                  0                4d      10.254.84.63    cp0    <none>           <none>
+default              redis-operator-54f9f9547-452n8                                    1/1     Running                  0                4d      10.254.83.211   cp0    <none>           <none>
+default              redis-operator-54f9f9547-vl8tr                                    0/1     Error                    1                17d     10.254.84.13    cp0    <none>           <none>
+default              redis-sentinel-redis-cluster-0                                    1/1     Running                  0                4d      10.254.83.245   cp0    <none>           <none>
+default              resourcemgmt-54l9x                                                1/1     Running                  122 (2d1h ago)   3d9h    10.254.83.213   cp0    <none>           <none>
+default              search-86866798b8-7hb4l                                           0/1     Error                    1 (16d ago)      17d     10.254.83.210   cp0    <none>           <none>
+default              search-86866798b8-rgh98                                           1/1     Running                  122 (2d1h ago)   4d      10.254.84.50    cp0    <none>           <none>
+default              servermgmt-pwwsb                                                  1/1     Running                  126 (2d1h ago)   3d9h    10.254.84.31    cp0    <none>           <none>
+default              sftp-d74vc                                                        1/1     Running                  377 (2d ago)     3d9h    10.254.84.65    cp0    <none>           <none>
+default              snmp-w7s79                                                        1/1     Running                  126 (2d1h ago)   3d9h    10.254.84.45    cp0    <none>           <none>
+default              snmpreceiver-csfmj                                                1/1     Running                  130 (2d1h ago)   3d9h    10.0.0.1        cp0    <none>           <none>
+default              sso-c7c57c789-76vsq                                               1/1     Running                  122 (2d1h ago)   4d      10.254.83.224   cp0    <none>           <none>
+default              sso-c7c57c789-c8kbz                                               0/1     ContainerStatusUnknown   1 (16d ago)      17d     10.254.84.5     cp0    <none>           <none>
+default              statistic-d7ztm                                                   1/1     Running                  122 (2d1h ago)   3d9h    10.254.84.58    cp0    <none>           <none>
+default              statsmgmtservice-8486b9585c-9vtzg                                 1/1     Running                  99 (2d ago)      4d      10.254.84.0     cp0    <none>           <none>
+default              statsmgmtservice-8486b9585c-ns7rv                                 0/1     ContainerStatusUnknown   1 (16d ago)      17d     10.254.84.19    cp0    <none>           <none>
+default              systemmgmtservice-7d59b78484-dsw6g                                0/1     ContainerStatusUnknown   1 (16d ago)      17d     10.254.83.205   cp0    <none>           <none>
+default              systemmgmtservice-7d59b78484-l6vhh                                1/1     Running                  302 (2d ago)     4d      10.254.84.22    cp0    <none>           <none>
+default              taskmgmt-gnp8r                                                    1/1     Running                  126 (2d1h ago)   3d9h    10.254.84.57    cp0    <none>           <none>
+default              tftp-k9872                                                        1/1     Running                  0                3d9h    10.0.0.1        cp0    <none>           <none>
+default              tsdb-0                                                            1/1     Running                  0                4d      10.254.84.2     cp0    <none>           <none>
+default              webui-s6zqv                                                       1/1     Running                  122 (2d1h ago)   3d9h    10.254.84.43    cp0    <none>           <none>
+etmem-system         etmem-agent-jswzf                                                 1/1     Running                  0                6m28s   10.0.0.1        cp0    <none>           <none>
+etmem-system         etmem-operator-9fbb64c9c-mrmkd                                    0/1     Running                  0                2d2h    10.254.83.218   cp0    <none>           <none>
+harbor               harbor-chartmuseum-6fbd8dfbd6-l5fhz                               0/1     ContainerStatusUnknown   1 (16d ago)      17d     10.254.83.232   cp0    <none>           <none>
+harbor               harbor-chartmuseum-6fbd8dfbd6-msx2p                               1/1     Running                  0                4d      10.254.83.251   cp0    <none>           <none>
+harbor               harbor-core-5c68c5b76f-fldfc                                      1/1     Running                  0                4d      10.254.83.199   cp0    <none>           <none>
+harbor               harbor-core-5c68c5b76f-nlpnl                                      0/1     ContainerStatusUnknown   4 (4d ago)       17d     10.254.83.214   cp0    <none>           <none>
+harbor               harbor-database-0                                                 1/1     Running                  0                4d      10.254.83.252   cp0    <none>           <none>
+harbor               harbor-jobservice-dd9d85dcf-qjdlk                                 1/1     Running                  4 (3d9h ago)     4d      10.254.84.42    cp0    <none>           <none>
+harbor               harbor-jobservice-dd9d85dcf-vgkxb                                 0/1     ContainerStatusUnknown   8 (4d ago)       17d     10.254.84.50    cp0    <none>           <none>
+harbor               harbor-nginx-67564d75bb-fd5rl                                     0/1     Completed                1 (16d ago)      17d     10.254.84.14    cp0    <none>           <none>
+harbor               harbor-nginx-67564d75bb-kl8s5                                     1/1     Running                  0                4d1h    10.254.83.233   cp0    <none>           <none>
+harbor               harbor-notary-server-7685bb4b69-47j78                             0/1     Error                    5 (4d ago)       17d     10.254.84.23    cp0    <none>           <none>
+harbor               harbor-notary-server-7685bb4b69-jv72c                             1/1     Running                  0                4d      10.254.84.62    cp0    <none>           <none>
+harbor               harbor-notary-signer-587575fdd9-dcc2z                             0/1     Error                    3 (16d ago)      17d     10.254.83.248   cp0    <none>           <none>
+harbor               harbor-notary-signer-587575fdd9-fhv4w                             1/1     Running                  0                4d      10.254.83.225   cp0    <none>           <none>
+harbor               harbor-portal-74fdbbbc56-fmpl6                                    1/1     Running                  0                4d1h    10.254.83.202   cp0    <none>           <none>
+harbor               harbor-portal-74fdbbbc56-wgqjx                                    0/1     ContainerStatusUnknown   1 (16d ago)      17d     10.254.83.255   cp0    <none>           <none>
+harbor               harbor-redis-0                                                    1/1     Running                  0                4d      10.254.83.244   cp0    <none>           <none>
+harbor               harbor-registry-c5b4ddb69-7lrvb                                   2/2     Running                  0                4d1h    10.254.84.30    cp0    <none>           <none>
+harbor               harbor-registry-c5b4ddb69-m9ffq                                   0/2     ContainerStatusUnknown   2 (16d ago)      17d     10.254.84.27    cp0    <none>           <none>
+harbor               harbor-trivy-0                                                    1/1     Running                  0                4d      10.254.83.234   cp0    <none>           <none>
+kube-system          calico-kube-controllers-6fb6c68998-4cdjx                          1/1     Running                  1 (16d ago)      17d     10.254.83.195   cp0    <none>           <none>
+kube-system          calico-node-rfbgv                                                 1/1     Running                  2 (16d ago)      17d     10.0.0.1        cp0    <none>           <none>
+kube-system          calico-node-snmrg                                                 1/1     Running                  0                17d     10.0.0.2        wk1    <none>           <none>
+kube-system          coredns-66456cfdf4-48cvx                                          1/1     Running                  1 (16d ago)      17d     10.254.83.194   cp0    <none>           <none>
+kube-system          coredns-66456cfdf4-p68qz                                          1/1     Running                  1 (16d ago)      17d     10.254.83.193   cp0    <none>           <none>
+kube-system          etcd-cp0                                                          1/1     Running                  2 (16d ago)      17d     10.0.0.1        cp0    <none>           <none>
+kube-system          kube-apiserver-cp0                                                1/1     Running                  2 (16d ago)      17d     10.0.0.1        cp0    <none>           <none>
+kube-system          kube-controller-manager-cp0                                       1/1     Running                  2 (16d ago)      17d     10.0.0.1        cp0    <none>           <none>
+kube-system          kube-multus-ds-655xb                                              1/1     Running                  0                17d     10.0.0.2        wk1    <none>           <none>
+kube-system          kube-multus-ds-hbjvf                                              1/1     Running                  0                3d9h    10.0.0.1        cp0    <none>           <none>
+kube-system          kube-proxy-442pk                                                  1/1     Running                  0                17d     10.0.0.2        wk1    <none>           <none>
+kube-system          kube-proxy-xnwf7                                                  1/1     Running                  1 (16d ago)      17d     10.0.0.1        cp0    <none>           <none>
+kube-system          kube-scheduler-cp0                                                1/1     Running                  2 (16d ago)      17d     10.0.0.1        cp0    <none>           <none>
+kube-system          whereabouts-8kpd2                                                 1/1     Running                  0                3d9h    10.0.0.1        cp0    <none>           <none>
+kube-system          whereabouts-sfzzx                                                 1/1     Running                  0                17d     10.0.0.2        wk1    <none>           <none>
+local-path-storage   local-path-provisioner-669dc9c5cf-6cb6r                           0/1     ContainerStatusUnknown   1 (16d ago)      17d     10.254.83.218   cp0    <none>           <none>
+local-path-storage   local-path-provisioner-669dc9c5cf-cn2p8                           1/1     Running                  0                4d      10.254.84.23    cp0    <none>           <none>
+metallb-system       metallb-controller-6cd48c478-dpqtg                                0/1     ContainerStatusUnknown   2 (16d ago)      17d     10.254.83.196   cp0    <none>           <none>
+metallb-system       metallb-controller-6cd48c478-vmjv8                                1/1     Running                  0                4d      10.254.83.200   cp0    <none>           <none>
+metallb-system       metallb-speaker-7c62w                                             1/1     Running                  0                3d9h    10.0.0.1        cp0    <none>           <none>
+rabbitmq-system      rabbitmq-cluster-operator-7dbddb5bcf-p8dkq                        1/1     Running                  0                4d      10.254.84.61    cp0    <none>           <none>
+rabbitmq-system      rabbitmq-cluster-operator-7dbddb5bcf-pl5vs                        0/1     Completed                1 (16d ago)      17d     10.254.83.212   cp0    <none>           <none>
+xpu-engine           gpu-operator-d9b7f7cdd-vvspg                                      1/1     Running                  1 (16d ago)      17d     10.254.84.53    cp0    <none>           <none>
+xpu-engine           xpu-engine-23-1774927319-node-feature-discovery-gc-74fc5c9z6tn7   1/1     Running                  0                17d     10.254.175.5    wk1    <none>           <none>
+xpu-engine           xpu-engine-23-1774927319-node-feature-discovery-master-658zwbks   1/1     Running                  1 (16d ago)      17d     10.254.84.52    cp0    <none>           <none>
+xpu-engine           xpu-engine-23-1774927319-node-feature-discovery-worker-rhw94      1/1     Running                  1 (16d ago)      17d     10.254.84.34    cp0    <none>           <none>
+xpu-engine           xpu-engine-23-1774927319-node-feature-discovery-worker-rr792      1/1     Running                  6 (16d ago)      17d     10.254.175.7    wk1    <none>           <none>
+xpu-engine           xpu-engine-controller-manager-6bc474df55-87nr9                    0/1     ContainerStatusUnknown   3 (16d ago)      17d     10.254.84.28    cp0    <none>           <none>
+xpu-engine           xpu-engine-controller-manager-6bc474df55-8xfkp                    0/1     Completed                0                17d     10.254.175.6    wk1    <none>           <none>
+xpu-engine           xpu-engine-controller-manager-6bc474df55-jszts                    0/1     Evicted                  0                17d     <none>          wk1    <none>           <none>
+xpu-engine           xpu-engine-controller-manager-6bc474df55-v2l5s                    0/1     Evicted                  0                17d     <none>          wk1    <none>           <none>
+xpu-engine           xpu-engine-controller-manager-6bc474df55-vlzph                    1/1     Running                  0                4d      10.254.175.15   wk1    <none>           <none>
+xpu-engine           xpu-engine-controller-manager-6bc474df55-wl8k6                    0/1     Evicted                  0                17d     <none>          wk1    <none>           <none>
+xpu-engine           xpu-quota-admission-547f7bc6f8-l56zm                              2/2     Running                  2 (16d ago)      17d     10.254.84.32    cp0    <none>           <none>

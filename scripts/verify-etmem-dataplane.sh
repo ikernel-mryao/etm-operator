@@ -262,21 +262,43 @@ if [ "$PROJECT_COUNT" -gt 0 ]; then
 fi
 echo ""
 
-# ------- 旧的同名进程干扰检查（保留兼容） -------
-if [ -n "$TARGET_PID" ] && [ -f "/proc/$TARGET_PID/comm" ]; then
-    echo "【附加】同名进程干扰检查"
-    PROC_NAME=$(cat "/proc/$TARGET_PID/comm")
-    MATCHES=$(pgrep -c "$PROC_NAME" 2>/dev/null || echo 0)
-    echo "  进程名: $PROC_NAME"
-    echo "  同名进程数: $MATCHES"
-    if [ "$MATCHES" -gt 1 ]; then
-        echo -e "  ${YELLOW}⚠️  存在多个同名进程，type=name 模式可能受干扰${NC}"
-        echo "  同名进程列表:"
-        pgrep -a "$PROC_NAME" | while read line; do
-            echo "    $line"
+# ------- PID 作用域隔离检查 -------
+echo "【附加】PID 作用域隔离检查（v0.4.0-pid）"
+echo "  当前版本使用 type=pid 进行精确 PID 定向，不再依赖 type=name 的 pgrep 匹配。"
+echo ""
+
+# 检查配置文件中是否使用 type=pid
+if [ -d "$CONF_DIR" ]; then
+    NAME_CONFIGS=$(grep -rl 'type=name' "$CONF_DIR"/*.conf 2>/dev/null | wc -l || echo 0)
+    PID_CONFIGS=$(grep -rl 'type=pid' "$CONF_DIR"/*.conf 2>/dev/null | wc -l || echo 0)
+    if [ "$NAME_CONFIGS" -gt 0 ]; then
+        echo -e "  ${RED}❌ 发现 $NAME_CONFIGS 个配置仍使用 type=name — 可能存在跨 Pod 匹配风险${NC}"
+        grep -l 'type=name' "$CONF_DIR"/*.conf 2>/dev/null | while read f; do
+            echo "    $(basename $f)"
         done
+    fi
+    if [ "$PID_CONFIGS" -gt 0 ]; then
+        echo -e "  ${GREEN}✅ $PID_CONFIGS 个配置使用 type=pid — PID 作用域隔离已启用${NC}"
+    fi
+fi
+echo ""
+
+# 同名进程跨 Pod 检查
+if [ -n "$TARGET_PID" ] && [ -f "/proc/$TARGET_PID/comm" ]; then
+    PROC_NAME=$(cat "/proc/$TARGET_PID/comm")
+    ALL_PIDS=($(pgrep -x "$PROC_NAME" 2>/dev/null || true))
+    echo "  进程名 '$PROC_NAME' 在节点上共有 ${#ALL_PIDS[@]} 个实例"
+    if [ ${#ALL_PIDS[@]} -gt 1 ]; then
+        echo "  PID 列表及 VmSwap 状态:"
+        for p in "${ALL_PIDS[@]}"; do
+            swap=$(grep VmSwap /proc/$p/status 2>/dev/null | awk '{print $2}' || echo "N/A")
+            cg=$(cat /proc/$p/cgroup 2>/dev/null | grep memory | head -1 | sed 's|.*kubepods-||;s|\.slice.*||' || echo "unknown")
+            printf "    PID=%-10s VmSwap=%-10s cgroup=...%s\n" "$p" "${swap}kB" "$cg"
+        done
+        echo ""
+        echo -e "  ${BLUE}提示：使用 type=pid 后，即使同名进程存在多个，etmem 也只会精确作用于配置中指定的 PID${NC}"
     else
-        echo -e "  ${GREEN}✅ 无同名进程干扰${NC}"
+        echo -e "  ${GREEN}✅ 节点上仅有 1 个 '$PROC_NAME' 进程，无隔离风险${NC}"
     fi
     echo ""
 fi

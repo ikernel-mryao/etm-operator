@@ -1,0 +1,43 @@
+2026-04-17T13:02:50Z	INFO	agent	Detected systemd cgroup driver
+2026-04-17T13:02:50Z	INFO	agent	Bootstrapped running tasks from NodeState	{"recovered": 0}
+2026-04-17T13:02:50Z	INFO	agent	Agent starting	{"node": "cp0", "interval": "30s"}
+2026-04-17T13:03:20Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-17T13:03:20Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-17T13:03:20Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-17T13:03:20Z	INFO	agent	Task started successfully	{"project": "default-memhog-test-memhog-p1548266", "pod": "memhog-test"}
+2026-04-17T13:03:20Z	INFO	agent	Task started successfully	{"project": "default-multiproc-test-sh-p2338866", "pod": "multiproc-test"}
+2026-04-17T13:03:20Z	INFO	agent	Task started successfully	{"project": "default-multiproc-test-memeat1-p2338929", "pod": "multiproc-test"}
+2026-04-17T13:03:20Z	INFO	agent	Task started successfully	{"project": "default-multiproc-test-memeat2-p2338930", "pod": "multiproc-test"}
+2026-04-17T13:03:50Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-17T13:03:50Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-17T13:03:50Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-17T13:04:20Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-17T13:04:20Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-17T13:04:20Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-17T13:04:50Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 245}
+2026-04-17T13:04:50Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-17T13:04:50Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-17T13:05:20Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 245}
+2026-04-17T13:05:20Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-17T13:05:20Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-17T13:05:50Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 245}
+2026-04-17T13:05:50Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-17T13:05:50Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-17T13:06:20Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 245}
+2026-04-17T13:06:20Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-17T13:06:20Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-17T13:06:50Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 245}
+2026-04-17T13:06:50Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-17T13:06:50Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-17T13:07:20Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 245}
+2026-04-17T13:07:20Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-17T13:07:20Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-17T13:07:50Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 245}
+2026-04-17T13:07:50Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-17T13:07:50Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-17T13:08:20Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 245}
+2026-04-17T13:08:20Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-17T13:08:20Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-17T13:08:50Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 245}
+2026-04-17T13:08:50Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-17T13:08:50Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}

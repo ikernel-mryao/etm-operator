@@ -1,0 +1,27 @@
+=================================================================
+etmem-operator v0.4.0-pid E2E Verification Summary
+Date: 2026-04-17
+=================================================================
+
+1. PID-based targeting: CONFIRMED
+   - Agent uses type=pid in etmem configs (not type=name)
+   - Each process gets its own per-PID project/object/task
+
+2. Multi-process support: CONFIRMED
+   - multiproc-test pod: memeat1 + memeat2 each get independent projects
+   - VmSwap grows for both processes independently
+
+3. Cross-pod isolation: CONFIRMED
+   - 3 memhog processes on same node
+   - Only the enabled Pod's process gets swapped
+   - Non-enabled Pod's memhog remains at VmSwap=0
+
+4. Evidence:
+   PID=1548266 (memhog-test, ENABLED):    VmSwap=287MB, VmRSS=1.6MB
+   PID=494856  (memhog-noenable, NO LABEL): VmSwap=0,    VmRSS=270MB
+   PID=2484659 (other pod, NO LABEL):       VmSwap=0,    VmRSS=277MB
+
+5. Agent logs show only enabled pods matched:
+   - "Matched pod memhog-test"
+   - "Matched pod multiproc-test"
+   - NO match for memhog-noenable

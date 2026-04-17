@@ -1,0 +1,61 @@
+apiVersion: v1
+items:
+- apiVersion: etmem.openeuler.io/v1alpha1
+  kind: EtmemNodeState
+  metadata:
+    creationTimestamp: "2026-04-15T12:22:27Z"
+    generation: 1
+    name: cp0
+    resourceVersion: "13176510"
+    uid: ec10ec17-ac23-4a36-9c4b-e4baa608c175
+  spec: {}
+  status:
+    etmemdReady: false
+    metrics:
+      totalManagedPods: 2
+    nodeName: cp0
+    socketReachable: false
+    tasks:
+    - podName: multiproc-test
+      podUID: 0a617848-6d85-4f9e-b289-96db0ab92062
+      policyRef:
+        name: etmem-auto
+        namespace: default
+      processes:
+      - name: memeat2
+        pid: 2338930
+      projectName: default-multiproc-test-memeat2-p2338930
+      state: running
+    - podName: memhog-test
+      podUID: ec6b2ec4-ca48-424b-bac8-91f7ef4b0fde
+      policyRef:
+        name: etmem-auto
+        namespace: default
+      processes:
+      - name: memhog
+        pid: 1548266
+      projectName: default-memhog-test-memhog-p1548266
+      state: running
+    - podName: multiproc-test
+      podUID: 0a617848-6d85-4f9e-b289-96db0ab92062
+      policyRef:
+        name: etmem-auto
+        namespace: default
+      processes:
+      - name: sh
+        pid: 2338866
+      projectName: default-multiproc-test-sh-p2338866
+      state: running
+    - podName: multiproc-test
+      podUID: 0a617848-6d85-4f9e-b289-96db0ab92062
+      policyRef:
+        name: etmem-auto
+        namespace: default
+      processes:
+      - name: memeat1
+        pid: 2338929
+      projectName: default-multiproc-test-memeat1-p2338929
+      state: running
+kind: List
+metadata:
+  resourceVersion: ""

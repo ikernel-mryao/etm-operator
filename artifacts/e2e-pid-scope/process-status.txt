@@ -1,0 +1,36 @@
+=== Per-Process Status ===
+--- PID 494856 ---
+Name:	memhog
+PPid:	494508
+VmRSS:	  270368 kB
+VmSwap:	       0 kB
+cgroup: 4:memory:/kubepods.slice/kubepods-besteffort.slice/kubepods-besteffort-pod0bacad52_b0b3_4c57_bcb0_3d96997c44e1.slice/cri-containerd-c2ce0f04b90ef9b7961a7dada47993a63597f7361f437666de176af44e827dd6.scope
+
+--- PID 1548266 ---
+Name:	memhog
+PPid:	1548196
+VmRSS:	   32108 kB
+VmSwap:	  252584 kB
+cgroup: 4:memory:/kubepods.slice/kubepods-besteffort.slice/kubepods-besteffort-podec6b2ec4_ca48_424b_bac8_91f7ef4b0fde.slice/cri-containerd-f0449d7ca9545a63dd35c751e3ac65f2b4e093917d52367de5029d8b51cb3799.scope
+
+--- PID 2484659 ---
+Name:	memhog
+PPid:	2484478
+VmRSS:	  277804 kB
+VmSwap:	       0 kB
+cgroup: 4:memory:/kubepods.slice/kubepods-burstable.slice/kubepods-burstable-podf738e855_ccee_44a8_8c73_b4754f5cc59d.slice/cri-containerd-9ba4ccc97fb6b0919c4f59c4fcfb4e23deecb5a783c681c08431949b7d11477b.scope
+
+--- PID 2338929 ---
+Name:	memeat1
+PPid:	2338866
+VmRSS:	    1788 kB
+VmSwap:	  152424 kB
+cgroup: 4:memory:/kubepods.slice/kubepods-burstable.slice/kubepods-burstable-pod0a617848_6d85_4f9e_b289_96db0ab92062.slice/cri-containerd-93f08dce2b11761fd5ad0d4f0df6c17592c3e21640f2b2c8ed8fedf6ad7d3415.scope
+
+--- PID 2338930 ---
+Name:	memeat2
+PPid:	2338866
+VmRSS:	    1784 kB
+VmSwap:	  152424 kB
+cgroup: 4:memory:/kubepods.slice/kubepods-burstable.slice/kubepods-burstable-pod0a617848_6d85_4f9e_b289_96db0ab92062.slice/cri-containerd-93f08dce2b11761fd5ad0d4f0df6c17592c3e21640f2b2c8ed8fedf6ad7d3415.scope
+

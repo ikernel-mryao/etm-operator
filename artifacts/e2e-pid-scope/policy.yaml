@@ -1,0 +1,27 @@
+apiVersion: v1
+items:
+- apiVersion: etmem.openeuler.io/v1alpha1
+  kind: EtmemPolicy
+  metadata:
+    creationTimestamp: "2026-04-15T12:22:35Z"
+    generation: 1
+    labels:
+      etmem.openeuler.io/auto-generated: "true"
+    name: etmem-auto
+    namespace: default
+    resourceVersion: "12951012"
+    uid: 3a671660-9151-4867-a3e3-2a30b905ff3e
+  spec:
+    engine:
+      profile: aggressive
+      type: slide
+    selector:
+      matchLabels:
+        etmem.openeuler.io/enable: "true"
+  status:
+    summary:
+      activeNodes: 1
+      managedPods: 4
+kind: List
+metadata:
+  resourceVersion: ""

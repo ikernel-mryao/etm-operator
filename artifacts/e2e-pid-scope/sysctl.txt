@@ -1,0 +1,10 @@
+=== Key sysctl ===
+vm.swappiness = 60
+vm.overcommit_memory = 1
+
+=== swap status ===
+NAME       TYPE      SIZE   USED PRIO
+/dev/dm-12 partition  16G 662.8M   -2
+               total        used        free      shared  buff/cache   available
+Mem:           1.0Ti       193Gi        19Gi       4.3Gi       804Gi       814Gi
+Swap:           15Gi       662Mi        15Gi

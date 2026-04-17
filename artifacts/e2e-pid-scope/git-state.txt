@@ -1,0 +1,11 @@
+=== Git State ===
+7b80726 test: add PID lifecycle, cross-pod isolation, and anti-regression tests
+625267a feat: update agent reconcile to PID-based iteration
+f5ae6e8 feat: add PID to ProjectNameForProcess for per-PID project identity
+0351d10 feat: switch etmem config from type=name to type=pid
+d3a736e chore: remove dead code ProjectName and PodTaskKey
+0be67cb feat: enhance dataplane script for multi-process and save E2E artifacts
+1716ada docs: 添加多进程数据面验证文档
+db22b4a test: add multi-project TaskManager lifecycle tests
+47f5bbb fix: use SHA256 hash suffix to prevent truncation collisions in ProjectNameForProcess
+a08bf28 feat: support multiple processes per Pod with per-process projects
