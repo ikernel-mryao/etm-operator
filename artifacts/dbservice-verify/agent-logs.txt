@@ -1,0 +1,200 @@
+2026-04-18T08:24:33Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:24:33Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:25:03Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:25:03Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:25:03Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:25:03Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:25:33Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:25:33Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:25:33Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:25:33Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:26:03Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:26:03Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:26:03Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:26:03Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:26:33Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:26:33Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:26:33Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:26:33Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:27:03Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:27:03Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:27:03Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:27:03Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:27:33Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:27:33Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:27:33Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:27:33Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:28:03Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:28:03Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:28:03Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:28:03Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:28:33Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:28:33Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:28:33Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:28:33Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:29:03Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:29:03Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:29:03Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:29:03Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:29:33Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:29:33Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:29:33Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:29:33Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:30:03Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:30:03Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:30:03Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:30:03Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:30:33Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:30:33Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:30:33Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:30:33Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:31:03Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:31:03Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:31:03Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:31:03Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:31:33Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:31:33Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:31:33Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:31:33Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:32:03Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:32:03Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:32:03Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:32:03Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:32:33Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:32:33Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:32:33Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:32:33Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:33:03Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:33:03Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:33:03Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:33:03Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:33:33Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:33:33Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:33:33Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:33:33Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:34:03Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:34:03Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:34:03Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:34:03Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:34:33Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:34:33Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:34:33Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:34:33Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:35:03Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:35:03Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:35:03Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:35:03Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:35:33Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:35:33Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:35:33Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:35:33Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:36:03Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:36:03Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:36:03Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:36:03Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:36:33Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:36:33Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:36:33Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:36:33Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:37:03Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:37:03Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:37:03Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:37:03Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:37:33Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:37:33Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:37:33Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:37:33Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:38:03Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:38:03Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:38:03Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:38:03Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:38:33Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:38:33Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:38:33Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:38:33Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:39:03Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:39:03Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:39:03Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:39:03Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:39:33Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:39:33Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:39:33Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:39:33Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:40:03Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:40:03Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:40:03Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:40:03Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:40:33Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:40:33Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:40:33Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:40:33Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:41:03Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:41:03Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:41:03Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:41:03Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:41:33Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:41:33Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:41:33Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:41:33Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:42:03Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:42:03Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:42:03Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:42:03Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:42:33Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:42:33Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:42:33Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:42:33Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:43:03Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:43:03Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:43:03Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:43:03Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:43:33Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:43:33Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:43:33Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:43:33Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:44:03Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:44:03Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:44:03Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:44:03Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:44:33Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:44:33Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:44:33Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:44:33Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:45:03Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:45:03Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:45:03Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:45:03Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:45:33Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:45:33Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:45:33Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:45:33Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:46:03Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:46:03Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:46:03Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:46:03Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:46:33Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:46:33Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:46:33Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:46:33Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:47:03Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:47:03Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:47:03Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:47:03Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:47:33Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:47:33Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:47:33Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:47:33Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:48:03Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:48:03Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:48:03Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:48:03Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:48:33Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:48:33Z	INFO	agent	Pod-level circuit breaker tripped	{"pod": "dbservice-gkw2b"}
+2026-04-18T08:48:33Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:48:33Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:49:03Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:49:03Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:49:03Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}
+2026-04-18T08:49:33Z	DEBUG	agent	Reconcile cycle	{"policies": 1, "pods": 244}
+2026-04-18T08:49:33Z	INFO	agent	Matched pod	{"pod": "memhog-test", "pids": 2, "policy": "etmem-auto"}
+2026-04-18T08:49:33Z	INFO	agent	Matched pod	{"pod": "multiproc-test", "pids": 4, "policy": "etmem-auto"}

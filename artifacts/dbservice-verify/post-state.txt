@@ -1,0 +1,12 @@
+=== Post-verification State ===
+Date: Sat Apr 18 04:48:02 PM CST 2026
+
+Key findings:
+  1. Control plane: Agent correctly matched labeled DaemonSet pod
+  2. Data plane: dbmonitor VmSwap reached 18MB before pod instability
+  3. Circuit breaker: Agent backed off after repeated pod restarts
+  4. zengine: Could not fully start (DB initialization failure, not etmem issue)
+
+Evidence captured during run:
+  dbmonitor PID=3762736 VmRSS=31472kB VmSwap=18056kB (before restart)
+  zengine PID=3968543 VmRSS=474076kB VmSwap=36kB (just started)

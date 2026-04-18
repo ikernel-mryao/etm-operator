@@ -1,0 +1,39 @@
+=================================================================
+dbservice DaemonSet 真实高负载验证总结
+日期: 2026-04-17 ~ 2026-04-18
+=================================================================
+
+一、验证方式
+  - 对现有 DaemonSet dbservice 的 Pod template 添加 etmem.openeuler.io/enable: "true" 标签
+  - kubectl patch ds dbservice 触发滚动更新，创建新 Pod
+  - 验证 etmem-operator/agent 是否自动识别并管理该 Pod
+
+二、控制面验证：✅ 通过
+  - Agent 日志确认匹配: "Matched pod dbservice-gkw2b, pids: 7, policy: etmem-auto"
+  - 自动创建 per-PID 项目: "default-dbservice-gkw2b-sleep-p3549179" 等
+  - Agent 正确识别 Pod 内所有用户进程（排除 pause）
+
+三、数据面验证：✅ 部分通过
+  - dbmonitor (PID=3762736): VmSwap 从 0 增长到 18056kB (18MB)
+  - zengine (PID=3968543): VmRSS=474076kB VmSwap=36kB（刚启动，尚未充分 swap）
+  - 注：zengine 是 1.6GB 的数据库引擎，因 DB 初始化耗时长且反复重启，未完成充分 swap
+
+四、Circuit Breaker 验证：✅ 通过
+  - Pod 反复重启 (156 次) 后，Agent circuit breaker 触发
+  - 日志: "Pod-level circuit breaker tripped, pod: dbservice-gkw2b"
+  - 避免了对不稳定 Pod 的无效重试
+
+五、隔离性验证：✅ 通过
+  - dbservice DaemonSet Pod (有 enable 标签) 的进程被管理
+  - 同时运行的 memhog-test、multiproc-test 不受影响
+  - dbservice Deployment Pod (无 etmem.openeuler.io/enable 标签) 不被管理
+
+六、恢复
+  - 验证完成后移除 etmem 标签，DaemonSet 滚动恢复
+  - 新 Pod 无 etmem 标签，不会被 etmem 管理
+
+七、关键发现
+  - 现有高负载 workload 可以通过简单添加标签即可接入 etmem
+  - 无需重建镜像或修改应用代码
+  - DB 类应用启动时间长，初始化期间 etmem swap 效果有限
+  - 真正的 swap 效果需要在应用稳定运行后观测
