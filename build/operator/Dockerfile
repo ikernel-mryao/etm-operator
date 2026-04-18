@@ -1,12 +1,7 @@
-FROM golang:1.21 AS builder
-WORKDIR /workspace
-COPY go.mod go.sum ./
-RUN go mod download
-COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build -a -o operator ./cmd/operator/
-
+## Pre-built binary Dockerfile (no Go required, no network required for build stage)
+## Usage: cp dist/operator bin/operator && nerdctl build -t etmem-operator:v0.4.0-pid -f build/operator/Dockerfile .
 FROM gcr.io/distroless/static:nonroot
 WORKDIR /
-COPY --from=builder /workspace/operator .
+COPY bin/operator .
 USER 65532:65532
 ENTRYPOINT ["/operator"]

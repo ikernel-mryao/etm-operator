@@ -1,12 +1,6 @@
-FROM golang:1.21 AS builder
-WORKDIR /workspace
-COPY go.mod go.sum ./
-RUN go mod download
-COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build -a -o agent ./cmd/agent/
-
+## Pre-built binary Dockerfile (no Go required, no network required for build stage)
+## Usage: cp dist/agent bin/agent && nerdctl build -t etmem-agent:v0.4.0-pid -f build/agent/Dockerfile .
 FROM openeuler/openeuler:22.03-lts
-# Agent needs access to host process info; etmem binary is mounted from host.
 RUN yum install -y procps-ng && yum clean all
-COPY --from=builder /workspace/agent /usr/local/bin/agent
+COPY bin/agent /usr/local/bin/agent
 ENTRYPOINT ["/usr/local/bin/agent"]
