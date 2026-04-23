@@ -6,3 +6,8 @@
 # Built binaries
 agent
 operator
+
+# Prebuilt release artifacts
+!dist/
+!dist/agent
+!dist/operator
