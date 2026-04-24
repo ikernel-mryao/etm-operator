@@ -78,7 +78,7 @@ Binary size: 35.6MB
 
 **模板渲染测试**：
 ```bash
-$ helm template etmem-operator deploy/helm/ --debug
+$ helm template etmem-operator ./deploy/helm/ --debug
 ---
 # Source: etmem-operator/templates/rbac.yaml
 apiVersion: v1

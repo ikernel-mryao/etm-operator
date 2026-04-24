@@ -85,8 +85,11 @@
 ### 部署
 ```bash
 # 安装 CRD 和组件
-helm install etmem-operator deploy/helm/ -n etmem-system --create-namespace
+helm install etmem-operator ./deploy/helm/ -n etmem-system --create-namespace
 ```
+
+> 请在仓库根目录执行上述命令。如果您当前目录不是仓库根目录，请改用绝对路径或完整相对路径，例如：
+> `helm install etmem-operator /path/to/etmem-operator/deploy/helm -n etmem-system --create-namespace`
 
 ### 创建策略
 ```yaml

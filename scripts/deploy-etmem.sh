@@ -151,7 +151,7 @@ if ! kubectl cluster-info &>/dev/null; then
     exit 1
 fi
 
-helm upgrade --install "${HELM_RELEASE}" deploy/helm \
+helm upgrade --install "${HELM_RELEASE}" ./deploy/helm \
     -n "${HELM_NAMESPACE}" \
     --create-namespace \
     --set operator.image="${OPERATOR_IMAGE}" \

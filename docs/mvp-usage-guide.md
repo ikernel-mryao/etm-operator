@@ -125,7 +125,7 @@ kubectl get crd | grep etmem
 
 ```bash
 # 从源码目录安装
-helm install etmem-operator deploy/helm/ \
+helm install etmem-operator ./deploy/helm/ \
   --namespace etmem-system \
   --create-namespace \
   --set image.repository=etmem-operator \
@@ -138,6 +138,8 @@ helm install etmem-operator deploy/helm/ \
 # NAMESPACE: etmem-system
 # STATUS: deployed
 ```
+
+> 请在 etmem-operator 仓库根目录执行该命令；如果当前目录不是仓库根目录，请将 `./deploy/helm/` 改成完整路径。
 
 ### 2.3 验证部署状态
 
