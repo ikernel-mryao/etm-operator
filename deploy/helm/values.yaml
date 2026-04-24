@@ -1,5 +1,5 @@
 operator:
-  image: etmem-operator:v0.2.0
+  image: etmem-operator:v0.4.0-pid
   replicas: 1
   resources:
     requests:
@@ -10,7 +10,7 @@ operator:
       memory: 256Mi
 
 agent:
-  image: etmem-agent:v0.2.0
+  image: etmem-agent:v0.4.0-pid
   reconcileInterval: 30s
   socketName: etmemd_socket
   resources:

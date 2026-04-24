@@ -128,10 +128,8 @@ kubectl get crd | grep etmem
 helm install etmem-operator ./deploy/helm/ \
   --namespace etmem-system \
   --create-namespace \
-  --set image.repository=etmem-operator \
-  --set image.tag=v0.2.0 \
-  --set agent.image.repository=etmem-agent \
-  --set agent.image.tag=v0.2.0
+  --set operator.image=etmem-operator:v0.4.0-pid \
+  --set agent.image=etmem-agent:v0.4.0-pid
 
 # 期望输出：
 # NAME: etmem-operator

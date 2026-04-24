@@ -90,6 +90,9 @@ helm install etmem-operator ./deploy/helm/ -n etmem-system --create-namespace
 
 > 请在仓库根目录执行上述命令。如果您当前目录不是仓库根目录，请改用绝对路径或完整相对路径，例如：
 > `helm install etmem-operator /path/to/etmem-operator/deploy/helm -n etmem-system --create-namespace`
+>
+> 如果您是离线导入本地镜像，且本地镜像 tag 为 `v0.4.0-pid`，也可以显式指定：
+> `helm install etmem-operator ./deploy/helm/ -n etmem-system --create-namespace --set operator.image=etmem-operator:v0.4.0-pid --set agent.image=etmem-agent:v0.4.0-pid`
 
 ### 创建策略
 ```yaml

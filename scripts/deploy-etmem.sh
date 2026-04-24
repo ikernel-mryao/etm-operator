@@ -24,7 +24,7 @@ log_status() {
 }
 
 # 镜像版本
-IMAGE_TAG="${IMAGE_TAG:-v0.2.0}"
+IMAGE_TAG="${IMAGE_TAG:-v0.4.0-pid}"
 OPERATOR_IMAGE="etmem-operator:${IMAGE_TAG}"
 AGENT_IMAGE="etmem-agent:${IMAGE_TAG}"
 HELM_RELEASE="etmem-operator"
