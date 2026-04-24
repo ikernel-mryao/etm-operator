@@ -4,8 +4,8 @@
 
 
 # Built binaries
-agent
-operator
+/agent
+/operator
 
 # Prebuilt release artifacts
 !dist/

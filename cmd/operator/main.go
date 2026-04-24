@@ -20,9 +20,24 @@ import (
 
 var scheme = runtime.NewScheme()
 
+type probeManager interface {
+	AddHealthzCheck(name string, check healthz.Checker) error
+	AddReadyzCheck(name string, check healthz.Checker) error
+}
+
 func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 	utilruntime.Must(etmemv1.AddToScheme(scheme))
+}
+
+func registerProbes(mgr probeManager) error {
+	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
+		return err
+	}
+	if err := mgr.AddReadyzCheck("readyz", healthz.Ping); err != nil {
+		return err
+	}
+	return nil
 }
 
 func main() {
@@ -62,8 +77,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
-		logger.Error(err, "unable to set up health check")
+	if err := registerProbes(mgr); err != nil {
+		logger.Error(err, "unable to set up probe checks")
 		os.Exit(1)
 	}
 
