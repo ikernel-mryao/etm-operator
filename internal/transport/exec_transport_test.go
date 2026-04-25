@@ -71,6 +71,16 @@ func TestExecTransport_ProjectShow(t *testing.T) {
 	assert.Equal(t, "/usr/bin/etmem project show -n myproject -s etmemd_socket", mock.calls[0])
 }
 
+func TestExecTransport_ProjectShowWithoutNameUsesSocketOnly(t *testing.T) {
+	mock := &mockExecutor{output: []byte("project list output")}
+	tr := NewExecTransport("etmemd_socket", mock)
+
+	out, err := tr.ProjectShow(context.Background(), "")
+	require.NoError(t, err)
+	assert.Equal(t, "project list output", out)
+	assert.Equal(t, "/usr/bin/etmem project show -s etmemd_socket", mock.calls[0])
+}
+
 func TestExecTransport_ErrorPropagation(t *testing.T) {
 	mock := &mockExecutor{err: fmt.Errorf("connection refused")}
 	tr := NewExecTransport("etmemd_socket", mock)

@@ -140,7 +140,7 @@ func main() {
 			return
 		case <-ticker.C:
 			start := time.Now()
-			if err := agentReconcile(ctx, k8sClient, tm, pidResolver, slideEngine, cb, nsWriter, nodeName, nodeLabels, useSystemdCgroup, logger); err != nil {
+			if err := agentReconcile(ctx, k8sClient, tr, tm, pidResolver, slideEngine, cb, nsWriter, nodeName, nodeLabels, useSystemdCgroup, logger); err != nil {
 				logger.Error(err, "reconcile failed")
 				agent.ReconcileErrors.Inc()
 			}
@@ -158,6 +158,32 @@ type desiredTaskInfo struct {
 	PID         int
 }
 
+func buildNodeStatus(nodeName string, desiredTasks map[string]desiredTaskInfo, transportHealthy bool) *etmemv1.EtmemNodeStateStatus {
+	uniquePods := make(map[string]bool)
+	nodeTasks := make([]etmemv1.NodeTask, 0, len(desiredTasks))
+	for projectName, taskInfo := range desiredTasks {
+		uniquePods[taskInfo.PodName] = true
+		nodeTasks = append(nodeTasks, etmemv1.NodeTask{
+			ProjectName: projectName,
+			PolicyRef:   taskInfo.PolicyRef,
+			PodName:     taskInfo.PodName,
+			PodUID:      taskInfo.PodUID,
+			Processes: []etmemv1.ManagedProcess{
+				{Name: taskInfo.ProcessName, PID: taskInfo.PID},
+			},
+			State: "running",
+		})
+	}
+
+	return &etmemv1.EtmemNodeStateStatus{
+		NodeName:        nodeName,
+		EtmemdReady:     transportHealthy,
+		SocketReachable: transportHealthy,
+		Tasks:           nodeTasks,
+		Metrics:         &etmemv1.NodeMetrics{TotalManagedPods: len(uniquePods)},
+	}
+}
+
 // agentReconcile 执行节点级任务推导的 5 步 reconcile 流程：
 // 1. 列出所有 EtmemPolicy
 // 2. 列出所有 Pod（客户端侧通过 MatchPodToPolicy 过滤）
@@ -169,6 +195,7 @@ type desiredTaskInfo struct {
 func agentReconcile(
 	ctx context.Context,
 	k8sClient client.Client,
+	tr transport.Transport,
 	tm *agent.TaskManager,
 	pidResolver *agent.PIDResolver,
 	slideEngine *engine.SlideEngine,
@@ -179,6 +206,12 @@ func agentReconcile(
 	useSystemdCgroup bool,
 	logger logr.Logger,
 ) error {
+	transportHealthy := true
+	if _, err := tr.ProjectShow(ctx, ""); err != nil {
+		transportHealthy = false
+		logger.V(1).Info("etmemd socket probe failed", "error", err)
+	}
+
 	// C3: Check node-level circuit breaker
 	if tripped, psi := cb.IsNodeTripped(); tripped {
 		logger.Info("Node-level circuit breaker tripped, stopping all tasks", "psi", psi)
@@ -328,33 +361,8 @@ func agentReconcile(
 		}
 	}
 
-	// C3: Update metrics
-	// Count unique Pods (not projects) for the metric
-	uniquePods := make(map[string]bool)
-	for _, taskInfo := range desiredTasks {
-		uniquePods[taskInfo.PodName] = true
-	}
-	agent.ManagedPodsTotal.Set(float64(len(uniquePods)))
-
-	// C3: Write EtmemNodeState
-	nodeTasks := make([]etmemv1.NodeTask, 0, len(desiredTasks))
-	for projectName, taskInfo := range desiredTasks {
-		nodeTasks = append(nodeTasks, etmemv1.NodeTask{
-			ProjectName: projectName,
-			PolicyRef:   taskInfo.PolicyRef,
-			PodName:     taskInfo.PodName,
-			PodUID:      taskInfo.PodUID,
-			Processes: []etmemv1.ManagedProcess{
-				{Name: taskInfo.ProcessName, PID: taskInfo.PID},
-			},
-			State: "running",
-		})
-	}
-	nodeStatus := &etmemv1.EtmemNodeStateStatus{
-		NodeName: nodeName,
-		Tasks:    nodeTasks,
-		Metrics:  &etmemv1.NodeMetrics{TotalManagedPods: len(uniquePods)},
-	}
+	nodeStatus := buildNodeStatus(nodeName, desiredTasks, transportHealthy)
+	agent.ManagedPodsTotal.Set(float64(nodeStatus.Metrics.TotalManagedPods))
 	if err := nsWriter.WriteStatus(ctx, nodeStatus); err != nil {
 		logger.Error(err, "failed to write NodeState")
 	}

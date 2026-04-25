@@ -59,7 +59,12 @@ func (t *ExecTransport) ProjectStop(ctx context.Context, projectName string) err
 }
 
 func (t *ExecTransport) ProjectShow(ctx context.Context, projectName string) (string, error) {
-	out, err := t.executor.Execute(ctx, config.EtmemBinaryPath, "project", "show", "-n", projectName, "-s", t.socketName)
+	args := []string{"project", "show"}
+	if projectName != "" {
+		args = append(args, "-n", projectName)
+	}
+	args = append(args, "-s", t.socketName)
+	out, err := t.executor.Execute(ctx, config.EtmemBinaryPath, args...)
 	if err != nil {
 		return "", fmt.Errorf("etmem project show failed: %w", err)
 	}

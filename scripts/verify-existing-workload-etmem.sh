@@ -47,6 +47,40 @@ log_result() {
     echo "$msg" | tee -a "${RESULT_FILE}"
 }
 
+filter_agent_lines_for_pod() {
+    local logs="$1"
+    local pod_name="$2"
+    echo "${logs}" | grep "\"pod\": \"${pod_name}\"" 2>/dev/null || true
+}
+
+build_cgroup_candidates() {
+    local pod_uid="$1"
+    local qos_class="$2"
+    local pod_uid_under
+    pod_uid_under=$(echo "$pod_uid" | tr '-' '_')
+
+    case "$(echo "$qos_class" | tr '[:upper:]' '[:lower:]')" in
+        guaranteed)
+            cat <<EOF
+/sys/fs/cgroup/memory/kubepods.slice/kubepods-pod${pod_uid_under}.slice
+/sys/fs/cgroup/memory/kubepods/pod${pod_uid}
+EOF
+            ;;
+        burstable)
+            cat <<EOF
+/sys/fs/cgroup/memory/kubepods.slice/kubepods-burstable.slice/kubepods-burstable-pod${pod_uid_under}.slice
+/sys/fs/cgroup/memory/kubepods/burstable/pod${pod_uid}
+EOF
+            ;;
+        *)
+            cat <<EOF
+/sys/fs/cgroup/memory/kubepods.slice/kubepods-besteffort.slice/kubepods-besteffort-pod${pod_uid_under}.slice
+/sys/fs/cgroup/memory/kubepods/besteffort/pod${pod_uid}
+EOF
+            ;;
+    esac
+}
+
 # 最终判定计数器
 CONTROL_PLANE_OK=0
 DATA_PLANE_OK=0
@@ -96,9 +130,10 @@ echo "【步骤 2】检查 Agent 日志中的 Pod 匹配信息..."
 log_result ""
 log_result "--- Agent 日志匹配信息 ---"
 
-AGENT_LOGS=$(kubectl -n "${ETMEM_NAMESPACE}" logs ds/etmem-agent --tail=200 2>&1 || echo "无法获取 Agent 日志")
+AGENT_LOGS=$(kubectl -n "${ETMEM_NAMESPACE}" logs ds/etmem-agent --tail=500 2>&1 || echo "无法获取 Agent 日志")
+POD_AGENT_LOGS=$(filter_agent_lines_for_pod "${AGENT_LOGS}" "${POD_NAME}")
 
-MATCH_LINES=$(echo "${AGENT_LOGS}" | grep -i "matched\|match.*pod\|${POD_NAME}" 2>/dev/null || true)
+MATCH_LINES=$(echo "${POD_AGENT_LOGS}" | grep -i "matched pod" 2>/dev/null || true)
 
 if [ -n "$MATCH_LINES" ]; then
     echo -e "  ${GREEN}✅ Agent 已匹配到目标 Pod${NC}"
@@ -111,7 +146,7 @@ else
 fi
 
 # 检查项目创建信息
-PROJECT_LINES=$(echo "${AGENT_LOGS}" | grep -i "project\|pid.*${POD_NAME}\|${POD_NAME}.*pid" 2>/dev/null || true)
+PROJECT_LINES=$(echo "${POD_AGENT_LOGS}" | grep -i "task started successfully\|project" 2>/dev/null || true)
 if [ -n "$PROJECT_LINES" ]; then
     echo ""
     echo "  项目/PID 相关日志:"
@@ -126,7 +161,24 @@ echo "【步骤 3】检查 EtmemNodeState..."
 log_result ""
 log_result "--- EtmemNodeState ---"
 
+POD_NODE=$(kubectl get pod "${POD_NAME}" -n "${NAMESPACE}" -o jsonpath='{.spec.nodeName}' 2>/dev/null || echo "")
 NODESTATE_TASKS=$(kubectl get etmemnodestate -A -o jsonpath='{range .items[*].status.tasks[*]}{.podName} → {.projectName} ({.state}){"\n"}{end}' 2>/dev/null || echo "")
+NODESTATE_HEALTH=""
+
+if [ -n "$POD_NODE" ]; then
+    NODESTATE_HEALTH=$(kubectl get etmemnodestate "${POD_NODE}" -o jsonpath='{.status.socketReachable} {.status.etmemdReady} {.status.metrics.totalManagedPods}' 2>/dev/null || echo "")
+fi
+
+if [ -n "$NODESTATE_HEALTH" ]; then
+    SOCKET_REACHABLE=$(echo "$NODESTATE_HEALTH" | awk '{print $1}')
+    ETMEMD_READY=$(echo "$NODESTATE_HEALTH" | awk '{print $2}')
+    MANAGED_PODS=$(echo "$NODESTATE_HEALTH" | awk '{print $3}')
+    echo "  NodeState 健康字段:"
+    echo "    socketReachable=${SOCKET_REACHABLE}"
+    echo "    etmemdReady=${ETMEMD_READY}"
+    echo "    totalManagedPods=${MANAGED_PODS}"
+    log_result "NodeState 健康字段: socketReachable=${SOCKET_REACHABLE}, etmemdReady=${ETMEMD_READY}, totalManagedPods=${MANAGED_PODS}"
+fi
 
 if [ -n "$NODESTATE_TASKS" ]; then
     POD_TASKS=$(echo "$NODESTATE_TASKS" | grep "${POD_NAME}" || true)
@@ -159,32 +211,46 @@ POD_UID=$(kubectl get pod "${POD_NAME}" -n "${NAMESPACE}" -o jsonpath='{.metadat
 TARGET_PIDS=()
 
 if [ -n "$POD_UID" ]; then
-    POD_UID_UNDER=$(echo "$POD_UID" | tr '-' '_')
     CGROUP_FOUND=""
+    POD_QOS=$(kubectl get pod "${POD_NAME}" -n "${NAMESPACE}" -o jsonpath='{.status.qosClass}' 2>/dev/null || echo "")
+    declare -A PID_SEEN=()
 
-    for QOS in burstable besteffort guaranteed; do
-        CGROUP_BASE="/sys/fs/cgroup/memory/kubepods.slice/kubepods-${QOS}.slice/kubepods-${QOS}-pod${POD_UID_UNDER}.slice"
+    while read -r CGROUP_BASE; do
+        [ -n "$CGROUP_BASE" ] || continue
         if [ -d "$CGROUP_BASE" ]; then
             CGROUP_FOUND="$CGROUP_BASE"
             echo "  cgroup 路径: ${CGROUP_BASE}"
             log_result "cgroup 路径: ${CGROUP_BASE}"
-            for scope in "$CGROUP_BASE"/cri-containerd-*.scope; do
-                [ -d "$scope" ] || continue
+            if [ -f "$CGROUP_BASE/cgroup.procs" ]; then
                 while read -r pid; do
+                    [ -n "${PID_SEEN[$pid]:-}" ] && continue
                     comm=$(cat "/proc/$pid/comm" 2>/dev/null || echo "unknown")
-                    # 排除 pause 基础设施进程
-                    if [ "$comm" != "pause" ]; then
+                    if [ "$comm" != "pause" ] && [ "$comm" != "sandbox" ]; then
                         TARGET_PIDS+=("$pid")
+                        PID_SEEN["$pid"]=1
+                    fi
+                done < "$CGROUP_BASE/cgroup.procs"
+            fi
+
+            for scope in "$CGROUP_BASE"/*; do
+                [ -d "$scope" ] || continue
+                [ -f "$scope/cgroup.procs" ] || continue
+                while read -r pid; do
+                    [ -n "${PID_SEEN[$pid]:-}" ] && continue
+                    comm=$(cat "/proc/$pid/comm" 2>/dev/null || echo "unknown")
+                    if [ "$comm" != "pause" ] && [ "$comm" != "sandbox" ]; then
+                        TARGET_PIDS+=("$pid")
+                        PID_SEEN["$pid"]=1
                     fi
                 done < "$scope/cgroup.procs"
             done
             break
         fi
-    done
+    done < <(build_cgroup_candidates "$POD_UID" "$POD_QOS")
 
     if [ -z "$CGROUP_FOUND" ]; then
         echo -e "  ${YELLOW}⚠️  未找到 Pod cgroup 路径（可能需要 root 权限或 cgroup 版本不同）${NC}"
-        log_result "⚠️ 未找到 cgroup 路径"
+        log_result "⚠️ 未找到 cgroup 路径（QOS=${POD_QOS}）"
     fi
 else
     echo -e "  ${RED}❌ 无法获取 Pod UID${NC}"
@@ -259,6 +325,24 @@ else
     echo -e "  ${YELLOW}⚠️  未发现用户进程，无法检查内存状态${NC}"
     echo "  提示: 此步骤需要在 Pod 所在节点上以 root 权限运行"
     log_result "⚠️ 未发现用户进程"
+fi
+echo ""
+
+# -----------------------------------------------
+# 【步骤 5.5】补充主机级内存观测
+# -----------------------------------------------
+echo "【步骤 5.5】主机级内存观测（补充）..."
+log_result ""
+log_result "--- 主机级内存观测 ---"
+
+FREE_M=$(free -m 2>/dev/null || true)
+MEM_AVAILABLE_KB=$(grep '^MemAvailable:' /proc/meminfo 2>/dev/null | awk '{print $2}' || echo "")
+
+if [ -n "$FREE_M" ]; then
+    echo "$FREE_M" | sed 's/^/  /' | tee -a "${RESULT_FILE}"
+fi
+if [ -n "$MEM_AVAILABLE_KB" ]; then
+    echo "  MemAvailable: ${MEM_AVAILABLE_KB} kB" | tee -a "${RESULT_FILE}"
 fi
 echo ""
 
