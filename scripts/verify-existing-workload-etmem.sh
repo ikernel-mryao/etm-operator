@@ -25,6 +25,8 @@ mkdir -p "${ARTIFACTS_DIR}"
 POD_NAME="${1:-}"
 NAMESPACE="${2:-default}"
 ETMEM_NAMESPACE="etmem-system"
+PROC_ROOT="${ETMEM_VERIFY_PROC_ROOT:-/proc}"
+CGROUP_ROOT="${ETMEM_VERIFY_CGROUP_ROOT:-/sys/fs/cgroup}"
 
 if [ -z "$POD_NAME" ]; then
     echo "用法: sudo bash $0 <pod-name> [命名空间]"
@@ -62,23 +64,30 @@ build_cgroup_candidates() {
     case "$(echo "$qos_class" | tr '[:upper:]' '[:lower:]')" in
         guaranteed)
             cat <<EOF
-/sys/fs/cgroup/memory/kubepods.slice/kubepods-pod${pod_uid_under}.slice
-/sys/fs/cgroup/memory/kubepods/pod${pod_uid}
+${CGROUP_ROOT}/memory/kubepods.slice/kubepods-pod${pod_uid_under}.slice
+${CGROUP_ROOT}/memory/kubepods/pod${pod_uid}
 EOF
             ;;
         burstable)
             cat <<EOF
-/sys/fs/cgroup/memory/kubepods.slice/kubepods-burstable.slice/kubepods-burstable-pod${pod_uid_under}.slice
-/sys/fs/cgroup/memory/kubepods/burstable/pod${pod_uid}
+${CGROUP_ROOT}/memory/kubepods.slice/kubepods-burstable.slice/kubepods-burstable-pod${pod_uid_under}.slice
+${CGROUP_ROOT}/memory/kubepods/burstable/pod${pod_uid}
 EOF
             ;;
         *)
             cat <<EOF
-/sys/fs/cgroup/memory/kubepods.slice/kubepods-besteffort.slice/kubepods-besteffort-pod${pod_uid_under}.slice
-/sys/fs/cgroup/memory/kubepods/besteffort/pod${pod_uid}
+${CGROUP_ROOT}/memory/kubepods.slice/kubepods-besteffort.slice/kubepods-besteffort-pod${pod_uid_under}.slice
+${CGROUP_ROOT}/memory/kubepods/besteffort/pod${pod_uid}
 EOF
             ;;
     esac
+}
+
+collect_cgroup_pids() {
+    local cgroup_base="$1"
+    find "$cgroup_base" -type f -name cgroup.procs 2>/dev/null | while read -r procs_file; do
+        cat "$procs_file" 2>/dev/null || true
+    done
 }
 
 # 最终判定计数器
@@ -221,29 +230,15 @@ if [ -n "$POD_UID" ]; then
             CGROUP_FOUND="$CGROUP_BASE"
             echo "  cgroup 路径: ${CGROUP_BASE}"
             log_result "cgroup 路径: ${CGROUP_BASE}"
-            if [ -f "$CGROUP_BASE/cgroup.procs" ]; then
-                while read -r pid; do
-                    [ -n "${PID_SEEN[$pid]:-}" ] && continue
-                    comm=$(cat "/proc/$pid/comm" 2>/dev/null || echo "unknown")
-                    if [ "$comm" != "pause" ] && [ "$comm" != "sandbox" ]; then
-                        TARGET_PIDS+=("$pid")
-                        PID_SEEN["$pid"]=1
-                    fi
-                done < "$CGROUP_BASE/cgroup.procs"
-            fi
-
-            for scope in "$CGROUP_BASE"/*; do
-                [ -d "$scope" ] || continue
-                [ -f "$scope/cgroup.procs" ] || continue
-                while read -r pid; do
-                    [ -n "${PID_SEEN[$pid]:-}" ] && continue
-                    comm=$(cat "/proc/$pid/comm" 2>/dev/null || echo "unknown")
-                    if [ "$comm" != "pause" ] && [ "$comm" != "sandbox" ]; then
-                        TARGET_PIDS+=("$pid")
-                        PID_SEEN["$pid"]=1
-                    fi
-                done < "$scope/cgroup.procs"
-            done
+            while read -r pid; do
+                [ -n "$pid" ] || continue
+                [ -n "${PID_SEEN[$pid]:-}" ] && continue
+                comm=$(cat "${PROC_ROOT}/$pid/comm" 2>/dev/null || echo "unknown")
+                if [ "$comm" != "pause" ] && [ "$comm" != "sandbox" ]; then
+                    TARGET_PIDS+=("$pid")
+                    PID_SEEN["$pid"]=1
+                fi
+            done < <(collect_cgroup_pids "$CGROUP_BASE")
             break
         fi
     done < <(build_cgroup_candidates "$POD_UID" "$POD_QOS")
@@ -281,10 +276,10 @@ if [ ${#TARGET_PIDS[@]} -gt 0 ]; then
     log_result "$DIVIDER"
 
     for pid in "${TARGET_PIDS[@]}"; do
-        if [ -f "/proc/$pid/status" ]; then
-            comm=$(cat "/proc/$pid/comm" 2>/dev/null || echo "N/A")
-            rss=$(grep VmRSS "/proc/$pid/status" 2>/dev/null | awk '{print $2}' || echo "0")
-            swap=$(grep VmSwap "/proc/$pid/status" 2>/dev/null | awk '{print $2}' || echo "0")
+        if [ -f "${PROC_ROOT}/$pid/status" ]; then
+            comm=$(cat "${PROC_ROOT}/$pid/comm" 2>/dev/null || echo "N/A")
+            rss=$(grep VmRSS "${PROC_ROOT}/$pid/status" 2>/dev/null | awk '{print $2}' || echo "0")
+            swap=$(grep VmSwap "${PROC_ROOT}/$pid/status" 2>/dev/null | awk '{print $2}' || echo "0")
 
             if [ "${swap:-0}" -gt 0 ] 2>/dev/null; then
                 STATUS="${GREEN}✅${NC}"

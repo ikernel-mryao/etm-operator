@@ -36,6 +36,19 @@ func setupMockCgroup(t *testing.T, pids []int) string {
 	return cgroupRoot
 }
 
+func setupNestedMockCgroup(t *testing.T, relPath string, pids []int) string {
+	t.Helper()
+	cgroupRoot := t.TempDir()
+	cgroupPath := filepath.Join(cgroupRoot, relPath)
+	require.NoError(t, os.MkdirAll(cgroupPath, 0755))
+	var content string
+	for _, pid := range pids {
+		content += strconv.Itoa(pid) + "\n"
+	}
+	require.NoError(t, os.WriteFile(filepath.Join(cgroupPath, "cgroup.procs"), []byte(content), 0644))
+	return cgroupRoot
+}
+
 func TestPIDResolver_ResolvePIDs_MatchByName(t *testing.T) {
 	procRoot := setupMockProc(t, map[int]string{100: "mysqld", 101: "startup.sh", 102: "java"})
 	cgroupRoot := setupMockCgroup(t, []int{100, 101, 102})
@@ -65,6 +78,42 @@ func TestPIDResolver_ResolvePIDs_PIDDisappeared(t *testing.T) {
 	require.NoError(t, err)
 	assert.Len(t, result, 1)
 	assert.Equal(t, "mysqld", result[0].Name)
+}
+
+func TestPIDResolver_ResolvePIDs_RecursesIntoNestedCgroupScopes(t *testing.T) {
+	procRoot := setupMockProc(t, map[int]string{100: "dcgm-exporter"})
+	cgroupRoot := setupNestedMockCgroup(t,
+		"memory/kubepods/besteffort/pod-abc/cri-containerd-123.scope/container",
+		[]int{100},
+	)
+
+	resolver := NewPIDResolver(procRoot, cgroupRoot)
+	result, err := resolver.ResolvePIDs("memory/kubepods/besteffort/pod-abc", nil)
+	require.NoError(t, err)
+	require.Len(t, result, 1)
+	assert.Equal(t, 100, result[0].PID)
+	assert.Equal(t, "dcgm-exporter", result[0].Name)
+}
+
+func TestPIDResolver_ResolvePIDs_SkipsUnreadableNestedSubdir(t *testing.T) {
+	procRoot := setupMockProc(t, map[int]string{100: "dcgm-exporter"})
+	cgroupRoot := setupNestedMockCgroup(t,
+		"memory/kubepods/besteffort/pod-abc/cri-containerd-123.scope/container",
+		[]int{100},
+	)
+	restrictedDir := filepath.Join(cgroupRoot, "memory/kubepods/besteffort/pod-abc", "aaa-locked.scope")
+	require.NoError(t, os.MkdirAll(restrictedDir, 0755))
+	require.NoError(t, os.Chmod(restrictedDir, 0))
+	t.Cleanup(func() {
+		_ = os.Chmod(restrictedDir, 0755)
+	})
+
+	resolver := NewPIDResolver(procRoot, cgroupRoot)
+	result, err := resolver.ResolvePIDs("memory/kubepods/besteffort/pod-abc", nil)
+	require.NoError(t, err)
+	require.Len(t, result, 1)
+	assert.Equal(t, 100, result[0].PID)
+	assert.Equal(t, "dcgm-exporter", result[0].Name)
 }
 
 func TestPIDResolver_ReadRSSKB(t *testing.T) {

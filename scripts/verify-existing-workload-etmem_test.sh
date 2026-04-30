@@ -6,6 +6,16 @@ REPO_DIR="$(dirname "$SCRIPT_DIR")"
 TMPDIR="$(mktemp -d)"
 trap 'rm -rf "$TMPDIR"' EXIT
 
+mkdir -p "${TMPDIR}/proc/123" \
+         "${TMPDIR}/cgroup/memory/kubepods/pod11111111-2222-3333-4444-555555555555/cri-containerd-abc.scope/container"
+printf "dcgm-exporter\n" > "${TMPDIR}/proc/123/comm"
+cat > "${TMPDIR}/proc/123/status" <<'EOF'
+Name:	dcgm-exporter
+VmRSS:	2048 kB
+VmSwap:	1024 kB
+EOF
+printf "123\n" > "${TMPDIR}/cgroup/memory/kubepods/pod11111111-2222-3333-4444-555555555555/cri-containerd-abc.scope/container/cgroup.procs"
+
 cat >"${TMPDIR}/kubectl" <<'EOF'
 #!/bin/bash
 set -euo pipefail
@@ -53,7 +63,10 @@ exit 1
 EOF
 chmod +x "${TMPDIR}/kubectl"
 
-OUTPUT="$(PATH="${TMPDIR}:$PATH" bash "${SCRIPT_DIR}/verify-existing-workload-etmem.sh" dbservice-4m2m7 default || true)"
+OUTPUT="$(PATH="${TMPDIR}:$PATH" \
+ETMEM_VERIFY_PROC_ROOT="${TMPDIR}/proc" \
+ETMEM_VERIFY_CGROUP_ROOT="${TMPDIR}/cgroup" \
+bash "${SCRIPT_DIR}/verify-existing-workload-etmem.sh" dbservice-4m2m7 default || true)"
 
 if grep -q 'dbservice-7v774' <<<"${OUTPUT}"; then
   echo "FAIL: script output still contains old pod logs"
@@ -62,6 +75,11 @@ fi
 
 if ! grep -q 'dbservice-4m2m7' <<<"${OUTPUT}"; then
   echo "FAIL: script output does not contain target pod logs"
+  exit 1
+fi
+
+if ! grep -q 'VmSwap > 0 的进程:  *1' <<<"${OUTPUT}"; then
+  echo "FAIL: script did not recurse into nested cgroup.procs"
   exit 1
 fi
 

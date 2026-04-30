@@ -104,31 +104,41 @@ func (r *PIDResolver) ResolvePIDs(cgroupRelPath string, processNames []string) (
 	return result, nil
 }
 
-// collectAllPIDs 读取目录自身及直接子目录中的 cgroup.procs，合并所有 PID。
+// collectAllPIDs 递归读取 pod cgroup 目录下所有层级中的 cgroup.procs，合并所有 PID。
 func (r *PIDResolver) collectAllPIDs(dir string) ([]int, error) {
 	var allPIDs []int
+	seen := make(map[int]struct{})
+	foundAny := false
 
-	// 读取当前目录的 cgroup.procs
-	if pids, err := r.readCgroupProcs(filepath.Join(dir, "cgroup.procs")); err == nil {
-		allPIDs = append(allPIDs, pids...)
-	}
-
-	// 遍历直接子目录（容器 scope），读取各自的 cgroup.procs
-	entries, err := os.ReadDir(dir)
+	err := filepath.WalkDir(dir, func(path string, d os.DirEntry, walkErr error) error {
+		if walkErr != nil {
+			return nil
+		}
+		if d.IsDir() {
+			return nil
+		}
+		if filepath.Base(path) != "cgroup.procs" {
+			return nil
+		}
+		foundAny = true
+		pids, err := r.readCgroupProcs(path)
+		if err != nil {
+			return nil
+		}
+		for _, pid := range pids {
+			if _, ok := seen[pid]; ok {
+				continue
+			}
+			seen[pid] = struct{}{}
+			allPIDs = append(allPIDs, pid)
+		}
+		return nil
+	})
 	if err != nil {
-		if len(allPIDs) > 0 {
+		if len(allPIDs) > 0 || foundAny {
 			return allPIDs, nil
 		}
 		return nil, err
-	}
-	for _, entry := range entries {
-		if !entry.IsDir() {
-			continue
-		}
-		childProcs := filepath.Join(dir, entry.Name(), "cgroup.procs")
-		if pids, err := r.readCgroupProcs(childProcs); err == nil {
-			allPIDs = append(allPIDs, pids...)
-		}
 	}
 	return allPIDs, nil
 }
